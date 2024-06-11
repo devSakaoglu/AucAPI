@@ -1,4 +1,4 @@
-import db from './Db.js';
+// import db from './Db.js';
 import express from 'express';
 
 const app = express();
@@ -13,6 +13,13 @@ app.get('/', (req, res) => {
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
+app.get('/tickets', (req, res) => {
+    const data   ={test:[
+        1,2,3,4,5,6,7
+        ]
+    }
+    return res.status(200).json(data);
+}
+);
 
 
-export default app;
