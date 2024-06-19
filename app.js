@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import db from "./Db.js";
 import express from "express";
 import jwt from "jsonwebtoken";
-app.use(express.json());
 const app = express();
+app.use(express.json());
 // Define your routes and middleware here
 app.get("/", (req, res) => {
   const data = {
