@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import db from "./Db.js";
 import express from "express";
-import { password } from "bun";
 import jwt from "jsonwebtoken";
 
 const app = express();
