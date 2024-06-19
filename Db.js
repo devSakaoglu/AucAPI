@@ -16,3 +16,24 @@ mongoose.connect(mongoURL, {})
 const db = mongoose.connection;
 
 export default db;
+// User Schema
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    // email: {
+    //     type: String,
+    //     required: true,
+    //     unique: true
+    // },
+    password: {
+        type: String,
+        required: true
+    }
+});
+
+// User Model
+const User = mongoose.model('User', userSchema);
+
+export { User };
