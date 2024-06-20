@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import userSchema from "./Schemas/AppUser.schema.js";
 // MongoDB connection URL
 const mongoURL =
   "mongodb+srv://mtsakaoglu:KAeDnvShvUf9DpY0@aucmongodb.krps0oo.mongodb.net/?retryWrites=true&w=majority&appName=AucMongoDb";
@@ -14,26 +14,7 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
   });
 
-const db = mongoose.connection;
-
-// User Schema
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-});
-
-// User Model
+// Models intergration
 const User = mongoose.model("User", userSchema);
 
-export { db, User };
+export { User };

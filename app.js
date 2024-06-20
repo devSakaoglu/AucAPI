@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { db, User } from "./Db.js";
+import { User } from "./Db.js";
 import express from "express";
 import jwt from "jsonwebtoken";
 const app = express();
@@ -28,10 +28,11 @@ app.post("/signup", async (req, res) => {
     cart[i] = 0;
   }
   const user = new User({
-    name: req.body.username,
+    name: req.body.name,
+    surname: req.body.surname,
+    phone: req.body.phone,
     email: req.body.email,
     password: req.body.password,
-    // cardData: cart,
   });
   await user.save();
 
