@@ -51,5 +51,16 @@ app.post("/signup", async (req, res) => {
   const token = jwt.sign(data, "secret_ecom");
   res.json({ success: true, token });
 });
+app.get("/login/default", async (req, res) => {
+  const user = await Users.find();
+  const userID = user[0].id;
+  console.log(userID);
+  const token = jwt.sign({ userID }, "secret key");
+  // const token_Data = jwt.verify(token, "secret key");
+  res.json({
+    token,
+    // token_Data,
+  });
+});
 
-export default app;
+// export default app;
