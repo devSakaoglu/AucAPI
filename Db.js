@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import userSchema from "./Schemas/AppUser.schema.js";
+import AppUserSchema from "./Schemas/AppUser.schema.js";
 // MongoDB connection URL
 const mongoURL =
   "mongodb+srv://mtsakaoglu:KAeDnvShvUf9DpY0@aucmongodb.krps0oo.mongodb.net/?retryWrites=true&w=majority&appName=AucMongoDb";
@@ -14,7 +14,7 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
   });
 
-// Models intergration
-const User = mongoose.model("User", userSchema);
+// Models integration3
+const AppUser = mongoose.model("AppUser", AppUserSchema);
 
-export { User };
+export { AppUser };
