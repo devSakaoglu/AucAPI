@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import userSchema from "./Schemas/AppUser.schema.js";
+import bidSchema from "./Schemas/Bid.schema.js";
 // MongoDB connection URL
 const mongoURL =
   "mongodb+srv://mtsakaoglu:KAeDnvShvUf9DpY0@aucmongodb.krps0oo.mongodb.net/?retryWrites=true&w=majority&appName=AucMongoDb";
@@ -15,6 +16,8 @@ mongoose
   });
 
 // Models intergration
-const User = mongoose.model("User", userSchema);
+const AppUser = mongoose.model("User", userSchema);
+const Bid = mongoose.model("Bid", bidSchema);
+// const Product = mongoose.model("Product", productSchema);
 
-export { User };
+export { AppUser, Bid };
