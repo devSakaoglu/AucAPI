@@ -83,4 +83,20 @@ ProductRouter.delete ("/product:id",async (req, res) => {
     }
 });
 
+//Search by tag
+ProductRouter.get ("/product/search",async (req, res) => {
+    try {
+        // Retrieve the tag from query parameters
+        const { tag } = req.query;
+        // Find products that have the specified tag in their tags array
+        const products = await Product.find({ tags: tag });
+        if(products.length === 0) {
+            return res.status(404).send('No products found with the specified tag.');
+        }
+        res.status(200).send(products);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 export default ProductRouter;
