@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const AppUserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -42,4 +42,4 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-export default userSchema;
+export default AppUserSchema;

@@ -46,6 +46,7 @@ app.post("/signup", async (req, res) => {
 });
 app.get("/login/default", async (req, res) => {
   const user = await AppUser.find();
+  const user = await AppUser.find();
   const userID = user[0].id;
   console.log(userID);
   const token = jwt.sign({ userID, role: "AppUser" }, "secret key");
