@@ -6,6 +6,7 @@ import cors from "cors";
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.options("*", cors());
 // Define your routes and middleware here
 app.get("/", (req, res) => {
   const data = {
