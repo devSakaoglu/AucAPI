@@ -1,8 +1,8 @@
 import express from "express";
-import mongoose from "mongoose";
 import { Bid } from "../Db.js";
 
 const BidRouter = express.Router();
+BidRouter.use(express.json());
 
 BidRouter.post("/bids", async (req, res) => {
   try {

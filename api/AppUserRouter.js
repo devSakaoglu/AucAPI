@@ -4,17 +4,12 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { AppUser } from "../Db.js";
 
-const router = express.Router();
+const AppUserRouter = express.AppUserRouter();
 
-router.use(express.json());
-
-mongoose.connect("mongodb://localhost:27017/yourDatabaseName", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+AppUserRouter.use(express.json());
 
 // SIGNUP Endpoint
-router.post("/signup", async (req, res) => {
+AppUserRouter.post("/signup", async (req, res) => {
   const { email, password, name, surname, phone } = req.body;
   try {
     const existingUser = await AppUser.findOne({ email });
@@ -40,7 +35,7 @@ router.post("/signup", async (req, res) => {
 });
 
 // LOGIN Endpoint
-router.post("/login", async (req, res) => {
+AppUserRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const appUser = await AppUser.findOne({ email });
@@ -62,7 +57,7 @@ router.post("/login", async (req, res) => {
 
 // CRUD Endpoints for AppUser
 // GET all users
-router.get("/users", async (req, res) => {
+AppUserRouter.get("/users", async (req, res) => {
   try {
     const users = await AppUser.find();
     res.json(users);
@@ -72,7 +67,7 @@ router.get("/users", async (req, res) => {
 });
 
 // GET a single AppUser by ID
-router.get("/users/:id", async (req, res) => {
+AppUserRouter.get("/users/:id", async (req, res) => {
   try {
     const appUser = await AppUser.findById(req.params.id);
     if (!AppUser) {
@@ -85,7 +80,7 @@ router.get("/users/:id", async (req, res) => {
 });
 
 // UPDATE a AppUser
-router.patch("/users/:id", async (req, res) => {
+AppUserRouter.patch("/users/:id", async (req, res) => {
   try {
     const updatedUser = await AppUser.findByIdAndUpdate(
       req.params.id,
@@ -101,7 +96,7 @@ router.patch("/users/:id", async (req, res) => {
 });
 
 // DELETE a AppUser
-router.delete("/users/:id", async (req, res) => {
+AppUserRouter.delete("/users/:id", async (req, res) => {
   try {
     await AppUser.findByIdAndDelete(req.params.id);
     res.send("AppUser deleted");
@@ -110,4 +105,4 @@ router.delete("/users/:id", async (req, res) => {
   }
 });
 
-export default router;
+export default AppUserRouter;

@@ -2,8 +2,10 @@
 import { AppUser, Bid } from "./Db.js";
 import express from "express";
 import jwt from "jsonwebtoken";
+import cors from "cors";
 const app = express();
 app.use(express.json());
+app.use(cors());
 // Define your routes and middleware here
 app.get("/", (req, res) => {
   const data = {
@@ -44,8 +46,7 @@ app.post("/signup", async (req, res) => {
   const token = jwt.sign(data, "secret_ecom");
   res.json({ success: true, token });
 });
-app.get("/login/default", async (req, res) => {
-  const user = await AppUser.find();
+app.post("/login/default", async (req, res) => {
   const user = await AppUser.find();
   const userID = user[0].id;
   console.log(userID);
