@@ -31,10 +31,7 @@ app.post("/signup", async (req, res) => {
       .status(400)
       .json({ success: false, errors: "existing user found with same email" });
   }
-  // let cart = {};
-  // for (let i = 0; i < 300; i++) {
-  //   cart[i] = 0;
-  // }
+
   const user = new AppUser({
     name: req.body.name,
     surname: req.body.surname,

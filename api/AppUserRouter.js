@@ -59,9 +59,12 @@ AppUserRouter.post("/login", async (req, res) => {
 AppUserRouter.get("/users", async (req, res) => {
   try {
     const users = await AppUser.find();
+    console.log(users);
+
     res.json(users);
   } catch (error) {
-    res.status(500).send("Error fetching users");
+    console.log(error);
+    res.status(500).send(error.message);
   }
 });
 

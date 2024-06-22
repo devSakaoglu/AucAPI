@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import userSchema from "./Schemas/AppUser.schema.js";
+import AppUserSchema from "./Schemas/AppUser.schema.js";
 import bidSchema from "./Schemas/Bid.schema.js";
 // MongoDB connection URL
 const mongoURL =
@@ -16,7 +16,7 @@ mongoose
   });
 
 // Models intergration
-const AppUser = mongoose.model("User", userSchema);
+const AppUser = mongoose.model("AppUser", AppUserSchema);
 const Bid = mongoose.model("Bid", bidSchema);
 // const Product = mongoose.model("Product", productSchema);
 
