@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
-import { AppUser } from "./Db.js";
 
-const ProductScheme = mongoose.Schema({
+const productSchema = new mongoose.Schema({
   appUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "AppUser",
@@ -48,7 +47,5 @@ const ProductScheme = mongoose.Schema({
   },
 });
 
-const   Product = mongoose.model("Product", ProductScheme);
 
-export default Product;
-// module.exports = Product;
+export default productSchema;
