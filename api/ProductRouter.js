@@ -99,4 +99,25 @@ ProductRouter.get ("/product/search",async (req, res) => {
     }
 });
 
+// Search products by name or description
+ProductRouter.get ("/products/searchByNameOrDescription",async (req, res) => {
+    try {
+        const { query } = req.query;
+        // Using a regular expression to perform a case-insensitive and partial match search
+        const searchRegex = new RegExp(query, 'i');
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: searchRegex } },
+                { description: { $regex: searchRegex } }
+            ]
+        });
+        if (products.length === 0) {
+            return res.status(404).send('No products found matching the query.');
+        }
+        res.status(200).send(products);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 export default ProductRouter;
