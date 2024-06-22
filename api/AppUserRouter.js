@@ -1,10 +1,9 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 import { AppUser } from "../Db.js";
 
-const AppUserRouter = express.AppUserRouter();
+const AppUserRouter = express.Router();
 
 AppUserRouter.use(express.json());
 

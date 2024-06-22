@@ -1,4 +1,6 @@
 // import mongoose from "mongoose";
+import AppUserRouter from "./api/AppUserRouter.js"; // Import AppUserRouter
+import BidRouter from "./api/BidRouteri.js"; // Import BidRouter
 import { AppUser, Bid } from "./Db.js";
 import express from "express";
 import jwt from "jsonwebtoken";
@@ -7,6 +9,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.options("*", cors());
+app.use("/api", AppUserRouter); // Mount AppUserRouter
+app.use("/api", BidRouter); // Mount BidRouter
+
 // Define your routes and middleware here
 app.get("/", (req, res) => {
   const data = {
