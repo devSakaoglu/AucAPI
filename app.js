@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { AppUser } from "./Db.js";
+// import mongoose from "mongoose";
+import { AppUser, Bid } from "./Db.js";
 import express from "express";
 import jwt from "jsonwebtoken";
 const app = express();
@@ -23,10 +23,10 @@ app.post("/signup", async (req, res) => {
       .status(400)
       .json({ success: false, errors: "existing user found with same email" });
   }
-  let cart = {};
-  for (let i = 0; i < 300; i++) {
-    cart[i] = 0;
-  }
+  // let cart = {};
+  // for (let i = 0; i < 300; i++) {
+  //   cart[i] = 0;
+  // }
   const user = new AppUser({
     name: req.body.name,
     surname: req.body.surname,
@@ -34,7 +34,7 @@ app.post("/signup", async (req, res) => {
     email: req.body.email,
     password: req.body.password,
   });
-  await user.save();
+  await AppUser.save();
 
   const data = {
     user: {
@@ -45,6 +45,7 @@ app.post("/signup", async (req, res) => {
   res.json({ success: true, token });
 });
 app.get("/login/default", async (req, res) => {
+  const user = await AppUser.find();
   const user = await AppUser.find();
   const userID = user[0].id;
   console.log(userID);
