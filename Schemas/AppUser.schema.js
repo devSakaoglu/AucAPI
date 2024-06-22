@@ -22,23 +22,23 @@ const AppUserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  products: {
+  listedProducts: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Product",
     required: false,
+    default: [],
   },
   bids: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Bid",
     required: false,
-  },
-  listedProducts: {
-    type: [String],
-    required: false,
+    default: [],
   },
   purchasedProducts: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Product",
     required: false,
+    default: [],
   },
 });
 

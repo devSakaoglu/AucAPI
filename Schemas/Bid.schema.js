@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const bidScheme = new mongoose.Schema({
+const BidScheme = new mongoose.Schema({
   appUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "AppUser",
@@ -21,4 +21,4 @@ const bidScheme = new mongoose.Schema({
   },
 });
 
-export default bidScheme;
+export default BidScheme;
