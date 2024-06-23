@@ -8,12 +8,15 @@ import jwt from "jsonwebtoken";
 import cors from "cors";
 const app = express();
 app.use(express.json());
-app.use(cors());
-app.options("*", cors());
-app.use("/api", AppUserRouter); // Mount AppUserRouter
+app.use("/api", AppUserRouter).options("*", cors()); // Mount AppUserRouter
 app.use("/api", BidRouter); // Mount BidRouter
 app.use("/api", ProductRouter);
-
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true, // This allows cookies to be sent across origins
+  })
+);
 // Define your routes and middleware here
 app.get("/", (req, res) => {
   const data = {
@@ -22,8 +25,8 @@ app.get("/", (req, res) => {
   res.json(data);
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(5000, () => {
+  console.log("5000");
 });
 
 app.post("/signup", async (req, res) => {
@@ -63,5 +66,3 @@ app.post("/login/default", async (req, res) => {
     token_Data,
   });
 });
-
-// export default app;

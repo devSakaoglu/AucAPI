@@ -2,31 +2,35 @@ import express from "express";
 import mongoose from "mongoose";
 import { Product } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
-
 const ProductRouter = express.Router();
 
 // Add a new product
-ProductRouter.post("/product", authMiddleware, async (req, res) => {
-  const { bids, name, description, startPrice, tags, category, quantity } =
-    req.body;
-  console.log(req.appUser._id);
-  try {
-    const newProduct = new Product({
-      appUser: req.appUser._id,
-      bids,
-      name,
-      description,
-      startPrice,
-      tags,
-      category,
-      quantity,
-    });
-    await newProduct.save();
-    res.status(201).send(newProduct);
-  } catch (error) {
-    res.status(400).send(error);
+ProductRouter.post(
+  "/product",
+  /*authMiddleware,*/ async (req, res) => {
+    // const { bids, name, description, startPrice, tags, category, quantity } =
+    //   req.body;
+    // console.log(req.appUser._id);
+    // try {
+    //   const newProduct = new Product({
+    //     appUser: req.appUser._id,
+    //     bids,
+    //     name,
+    //     description,
+    //     startPrice,
+    //     tags,
+    //     category,
+    //     quantity,
+    //   });
+    //   await newProduct.save();
+    //   res.status(201).send(newProduct);
+    // } catch (error) {
+    //   res.status(400).send(error);
+    // }
+    const products = Product.find();
+    res.status(200).json(products);
   }
-});
+);
 // Get all products
 ProductRouter.get("/product", async (req, res) => {
   try {
