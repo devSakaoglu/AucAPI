@@ -1,7 +1,8 @@
 // import mongoose from "mongoose";
 import AppUserRouter from "./api/AppUserRouter.js"; // Import AppUserRouter
 import BidRouter from "./api/BidRouteri.js"; // Import BidRouter
-import { AppUser, Bid } from "./Db.js";
+import ProductRouter from "./api/ProductRouter.js";
+import { AppUser, Bid, Product } from "./Db.js";
 import express from "express";
 import jwt from "jsonwebtoken";
 import cors from "cors";
@@ -11,6 +12,7 @@ app.use(cors());
 app.options("*", cors());
 app.use("/api", AppUserRouter); // Mount AppUserRouter
 app.use("/api", BidRouter); // Mount BidRouter
+app.use("/api", ProductRouter);
 
 // Define your routes and middleware here
 app.get("/", (req, res) => {
@@ -51,8 +53,6 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/login/default", async (req, res) => {
-
-
   const user = await AppUser.find();
   const userID = user[0].id;
   console.log(userID);

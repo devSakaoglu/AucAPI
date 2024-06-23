@@ -1,14 +1,43 @@
 import mongoose from "mongoose";
 
 const tags = [
-  "New", "Used", "Refurbished", "Vintage", "Antique", "Rare", "Limited Edition",
-  "Mint Condition", "Good Condition", "Fair Condition", "For Parts",
-  "Electronics", "Fashion", "Home and Garden", "Art", "Collectibles",
-  "Sports and Hobbies", "Books", "Vehicles", "Jewelry",
-  "Gifts", "Holiday", "Wedding", "Birthday", "Anniversary",
-  "Kids", "Teens", "Adults", "For Men", "For Women", "For Pets",
-  "Eco-Friendly", "Upcycled", "Recycled",
-  "Local", "Imported", "Handmade"
+  "New",
+  "Used",
+  "Refurbished",
+  "Vintage",
+  "Antique",
+  "Rare",
+  "Limited Edition",
+  "Mint Condition",
+  "Good Condition",
+  "Fair Condition",
+  "For Parts",
+  "Electronics",
+  "Fashion",
+  "Home and Garden",
+  "Art",
+  "Collectibles",
+  "Sports and Hobbies",
+  "Books",
+  "Vehicles",
+  "Jewelry",
+  "Gifts",
+  "Holiday",
+  "Wedding",
+  "Birthday",
+  "Anniversary",
+  "Kids",
+  "Teens",
+  "Adults",
+  "For Men",
+  "For Women",
+  "For Pets",
+  "Eco-Friendly",
+  "Upcycled",
+  "Recycled",
+  "Local",
+  "Imported",
+  "Handmade",
 ];
 
 const productSchema = new mongoose.Schema({
@@ -39,10 +68,10 @@ const productSchema = new mongoose.Schema({
     type: [String], //string check
     required: false,
     validate: {
-      validator: function(v) {
-          return v.every(tag => tags.includes(tag));
+      validator: function (v) {
+        return v.every((tag) => tags.includes(tag));
       },
-    }
+    },
   },
   category: {
     type: [String], //enum or string check
@@ -62,6 +91,5 @@ const productSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
 
 export default productSchema;

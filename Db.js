@@ -19,6 +19,6 @@ mongoose
 // Models intergration
 const AppUser = mongoose.model("AppUser", AppUserSchema);
 const Bid = mongoose.model("Bid", bidSchema);
-const Product = mongoose.model("Product",productSchema)
+const Product = mongoose.model("Product", productSchema);
 
-export { AppUser, Bid, Product};
+export { AppUser, Bid, Product };

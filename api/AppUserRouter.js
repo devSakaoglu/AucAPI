@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { AppUser } from "../Db.js";
+import authMiddleware from "./midleware/auth.js";
 
 const AppUserRouter = express.Router();
 
@@ -15,21 +16,20 @@ AppUserRouter.post("/signup", async (req, res) => {
     if (existingUser) {
       return res.status(400).send("AppUser already exists");
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
     const appUser = new AppUser({
       name,
       surname,
       email,
       phone,
-      password: hashedPassword,
+      password,
     });
-    await AppUser.save();
-    const token = jwt.sign({ email: AppUser.email, id: AppUser._id }, "test", {
+    await appUser.save();
+    const token = jwt.sign({ email: appUser.email, id: appUser._id }, "test", {
       expiresIn: "1h",
     });
-    res.status(201).json({ AppUser, token });
+    res.status(201).json({ token });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -38,25 +38,25 @@ AppUserRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const appUser = await AppUser.findOne({ email });
-    if (!AppUser) {
+    if (!appUser) {
       return res.status(404).send("AppUser does not exist");
     }
-    const isPasswordCorrect = await bcrypt.compare(password, AppUser.password);
+    const isPasswordCorrect = await bcrypt.compare(password, appUser.password);
     if (!isPasswordCorrect) {
       return res.status(400).send("Invalid credentials");
     }
-    const token = jwt.sign({ email: AppUser.email, id: AppUser._id }, "test", {
-      expiresIn: "1h",
+    const token = jwt.sign({ email: appUser.email, id: appUser._id }, "test", {
+      expiresIn: "1d",
     });
-    res.status(200).json({ AppUser, token });
+    res.status(200).json({ appUser, token });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: error.message });
   }
 });
 
 // CRUD Endpoints for AppUser
 // GET all users
-AppUserRouter.get("/users", async (req, res) => {
+AppUserRouter.get("/users", authMiddleware, async (req, res) => {
   try {
     const users = await AppUser.find();
     console.log(users);
@@ -72,10 +72,10 @@ AppUserRouter.get("/users", async (req, res) => {
 AppUserRouter.get("/users/:id", async (req, res) => {
   try {
     const appUser = await AppUser.findById(req.params.id);
-    if (!AppUser) {
+    if (!alertppUser) {
       return res.status(404).send("AppUser not found");
     }
-    res.json(AppUser);
+    res.json(appUser);
   } catch (error) {
     res.status(500).send("Error fetching AppUser");
   }
