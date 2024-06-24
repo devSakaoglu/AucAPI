@@ -1,11 +1,11 @@
 // auth.js
 import jwt from "jsonwebtoken";
 import { AppUser } from "../../Db.js";
+import process from "process";
 
 // Import any necessary dependencies
 // For example, if you're using Express.js:
 // const jwt = require('jsonwebtoken');
-
 // Define your authentication middleware function
 const authMiddleware = async (req, res, next) => {
   // Check if the user is authenticated
@@ -16,7 +16,7 @@ const authMiddleware = async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
   try {
-    const decoded = jwt.verify(token, "test");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const appUser = await AppUser.findOne({ _id: decoded.id });
     if (!appUser) {
       return res.status(404).send("AppUser does not exist");

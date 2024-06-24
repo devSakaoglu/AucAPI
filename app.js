@@ -6,17 +6,18 @@ import { AppUser, Bid, Product } from "./Db.js";
 import express from "express";
 import jwt from "jsonwebtoken";
 import cors from "cors";
+const PORT = 5000;
 const app = express();
+
 app.use(express.json());
-app.use("/api", AppUserRouter).options("*", cors()); // Mount AppUserRouter
-app.use("/api", BidRouter); // Mount BidRouter
-app.use("/api", ProductRouter);
+
 app.use(
   cors({
     origin: "http://localhost:3000",
-    credentials: true, // This allows cookies to be sent across origins
+    credentials: true,
   })
 );
+app.use("/api", AppUserRouter, BidRouter, ProductRouter);
 // Define your routes and middleware here
 app.get("/", (req, res) => {
   const data = {
@@ -25,8 +26,9 @@ app.get("/", (req, res) => {
   res.json(data);
 });
 
-app.listen(5000, () => {
-  console.log("5000");
+app.listen(PORT, () => {
+  console.log("JWT_SECRET :", process.env.JWT_SECRET);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 app.post("/signup", async (req, res) => {

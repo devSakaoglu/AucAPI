@@ -1,15 +1,20 @@
 import express from "express";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { AppUser } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
+import bcrypt from "bcrypt";
 import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
 const AppUserRouter = express.Router();
 
 AppUserRouter.use(express.json());
 
 // SIGNUP Endpoint
+AppUserRouter.get("/login", (req, res) => {
+  res.json("Login working");
+});
 AppUserRouter.post("/signup", async (req, res) => {
   const { email, password, name, surname, phone } = req.body;
   try {
@@ -40,14 +45,14 @@ AppUserRouter.post("/login", async (req, res) => {
   try {
     const appUser = await AppUser.findOne({ email });
     if (!appUser) {
-      return res.status(414).send("AppUser does not exist");
+      return res.status(444).send("AppUser does not exist");
     }
-    console.log(password);
-    console.log(appUser.password);
-    // const isPasswordCorrect = await bcrypt.compare(password, appUser.password);
-    // if (!isPasswordCorrect) {
-    //   return res.status(400).send("Invalid credentials");
-    // }
+    const isPasswordCorrect = await bcrypt.compare(password, appUser.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).send("Invalid credentials");
+    }
+    console.log({ pass: password, truePass: isPasswordCorrect });
+
     const token = jwt.sign({ email: appUser.email, id: appUser._id }, "test", {
       expiresIn: "1d",
     });
@@ -59,17 +64,20 @@ AppUserRouter.post("/login", async (req, res) => {
 
 // CRUD Endpoints for AppUser
 // GET all users
-AppUserRouter.get("/users", authMiddleware, async (req, res) => {
-  try {
-    const users = await AppUser.find();
-    console.log(users);
+AppUserRouter.get(
+  "/users",
+  /*authMiddleware,*/ async (req, res) => {
+    try {
+      const users = await AppUser.find();
+      console.log(users);
 
-    res.json(users);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send(error.message);
+      res.json(users);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error.message);
+    }
   }
-});
+);
 
 // GET a single AppUser by ID
 AppUserRouter.get("/users/:id", async (req, res) => {
