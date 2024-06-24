@@ -30,7 +30,7 @@ app.listen(PORT, () => {
   console.log("JWT_SECRET :", process.env.JWT_SECRET);
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
+//
 app.post("/signup", async (req, res) => {
   let check = await AppUser.findOne({ email: req.body.email });
   if (check) {
