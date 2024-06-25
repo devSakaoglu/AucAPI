@@ -49,7 +49,7 @@ const productSchema = new mongoose.Schema({
   bids: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Bid",
-    required: true,
+    required: false,
   },
   name: {
     type: String, //string check

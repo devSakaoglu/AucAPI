@@ -7,11 +7,30 @@ const AppUserSchema = new mongoose.Schema({
     type: String,
     required: true,
     minLength: [3, "Name must be at least 3 characters"],
+    trim: true,
+    validate: {
+      validator: (value) => {
+        if ((value.match(/ /g) || []).length > 2) {
+          return false;
+        }
+        return RegExp(/^[a-zA-Z\s]+$/).test(value);
+      },
+      message: "Name must contain only letters and two spaces",
+    },
   },
   surname: {
     type: String,
     required: true,
     minLength: [3, "Surname must be at least 3 characters"],
+    validate: {
+      validator: (value) => {
+        if ((value.match(/ /g) || []).length > 2) {
+          return false;
+        }
+        return RegExp(/^[a-zA-Z\s]+$/).test(value);
+      },
+      message: "Name must contain only letters and two spaces",
+    },
   },
   phone: {
     type: String,

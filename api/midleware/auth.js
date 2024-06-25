@@ -1,8 +1,8 @@
 // auth.js
 import jwt from "jsonwebtoken";
 import { AppUser } from "../../Db.js";
-import process from "process";
-
+import dotenv from "dotenv";
+dotenv.config();
 // Import any necessary dependencies
 // For example, if you're using Express.js:
 // const jwt = require('jsonwebtoken');
@@ -10,22 +10,29 @@ import process from "process";
 const authMiddleware = async (req, res, next) => {
   // Check if the user is authenticated
   // For example, if you're using JWT authentication:
-  const token = req.headers.authorization.replace("Bearer ", "");
 
-  if (!token) {
+  if (!req.session?.jwt) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const appUser = await AppUser.findOne({ _id: decoded.id });
+    const payload = jwt.verify(req.session.jwt, process.env.JWT_SECRET);
+    console.log("Payload", payload);
+    // const token = req.headers.authorization.replace("Bearer ", "");
+
+    // if (!token) {
+    //   return res.status(401).json({ message: "Unauthorized" });
+    // }
+
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const appUser = await AppUser.findOne({ _id: payload.id });
     if (!appUser) {
       return res.status(404).send("AppUser does not exist");
     }
-    req.token = token;
+    req.token = req.session.jwt;
     req.appUser = appUser;
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
+    return res.status(401).json({ message: err.message });
   }
 
   // Replace the above code with your own authentication logic

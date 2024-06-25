@@ -3,24 +3,25 @@ import BidRouter from "./api/BidRouteri.js";
 import ProductRouter from "./api/ProductRouter.js";
 import express from "express";
 import cors from "cors";
+import cookieSession from "cookie-session";
 const PORT = 5000;
 const app = express();
-
 app.use(express.json());
-
 app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
+  cookieSession({
+    signed: false,
+    secure: false,
+    sameSite: "lax",
   })
 );
-app.use("/api", AppUserRouter, BidRouter, ProductRouter);
+app.use(cors());
+app.use("/api", AppUserRouter);
+app.use("/api/bids", BidRouter);
+app.use("/api", ProductRouter);
+
 // Define your routes and middleware here
 app.get("/", (req, res) => {
-  const data = {
-    message: "Hello World!",
-  };
-  res.json(data);
+  res.json({ message: "Hello World!" });
 });
 
 app.listen(PORT, () => {

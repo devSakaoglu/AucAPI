@@ -4,7 +4,7 @@ import { Bid } from "../Db.js";
 const BidRouter = express.Router();
 BidRouter.use(express.json());
 
-BidRouter.post("/bids", async (req, res) => {
+BidRouter.post("/", async (req, res) => {
   try {
     const newBid = new Bid(req.body);
     const savedBid = await newBid.save();
@@ -15,7 +15,7 @@ BidRouter.post("/bids", async (req, res) => {
 });
 
 // GET all bids
-BidRouter.get("/bids", async (req, res) => {
+BidRouter.get("/", async (req, res) => {
   try {
     const bids = await Bid.find();
     res.json(bids);
@@ -25,7 +25,7 @@ BidRouter.get("/bids", async (req, res) => {
 });
 
 // GET a specific bid by ID
-BidRouter.get("/bids/:id", async (req, res) => {
+BidRouter.get("/:id", async (req, res) => {
   try {
     const bid = await Bid.findById(req.params.id);
     if (bid == null) {
@@ -38,7 +38,7 @@ BidRouter.get("/bids/:id", async (req, res) => {
 });
 
 // UPDATE a bid
-BidRouter.patch("/bids/:id", async (req, res) => {
+BidRouter.patch("/:id", async (req, res) => {
   try {
     const bid = await Bid.findById(req.params.id);
     if (bid == null) {
@@ -64,7 +64,7 @@ BidRouter.patch("/bids/:id", async (req, res) => {
 });
 
 // DELETE a bid
-BidRouter.delete("/bids/:id", async (req, res) => {
+BidRouter.delete("/:id", async (req, res) => {
   try {
     const bid = await Bid.findById(req.params.id);
     if (bid == null) {

@@ -1,36 +1,27 @@
 import express from "express";
-import mongoose from "mongoose";
 import { Product } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
+import { AppUser } from "../Db.js";
 const ProductRouter = express.Router();
 
 // Add a new product
-ProductRouter.post(
-  "/product",
-  /*authMiddleware,*/ async (req, res) => {
-    // const { bids, name, description, startPrice, tags, category, quantity } =
-    //   req.body;
-    // console.log(req.appUser._id);
-    // try {
-    //   const newProduct = new Product({
-    //     appUser: req.appUser._id,
-    //     bids,
-    //     name,
-    //     description,
-    //     startPrice,
-    //     tags,
-    //     category,
-    //     quantity,
-    //   });
-    //   await newProduct.save();
-    //   res.status(201).send(newProduct);
-    // } catch (error) {
-    //   res.status(400).send(error);
-    // }
-    const products = Product.find();
-    res.status(200).json(products);
+ProductRouter.post("/product", authMiddleware, async (req, res) => {
+  try {
+    const newProduct = new Product({
+      ...req.body,
+      appUser: req.appUser._id,
+    });
+    await newProduct.save();
+
+    // const appUser = await AppUser.findById(req.appUser._id);
+    // appUser.listedProducts.push(newProduct._id);
+    // await appUser.save();
+
+    res.status(201).send({ newProduct });
+  } catch (error) {
+    res.status(400).send(error);
   }
-);
+});
 // Get all products
 ProductRouter.get("/product", async (req, res) => {
   try {
@@ -58,7 +49,7 @@ ProductRouter.get("/product/:id", async (req, res) => {
     // await product.populate("appUser", "-_id");
     await product.populate({
       path: "appUser",
-      select: { name: 1, surname: 1, _id: 0 },
+      select: { name: 1, surname: 1, _id: 1 },
     });
     if (!product) {
       return res.status(404).send();
@@ -70,7 +61,7 @@ ProductRouter.get("/product/:id", async (req, res) => {
 });
 
 // Update a product
-ProductRouter.patch("/product:id", async (req, res) => {
+ProductRouter.patch("/product:id", authMiddleware, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "name",

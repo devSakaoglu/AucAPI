@@ -3,12 +3,10 @@ import jwt from "jsonwebtoken";
 import { AppUser } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
 import bcrypt from "bcrypt";
-import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 
 const AppUserRouter = express.Router();
-
 AppUserRouter.use(express.json());
 
 // SIGNUP Endpoint
@@ -16,24 +14,26 @@ AppUserRouter.get("/login", (req, res) => {
   res.json("Login working");
 });
 AppUserRouter.post("/signup", async (req, res) => {
-  const { email, password, name, surname, phone } = req.body;
+  // const { email, password, name, surname, phone } = req.body;
   try {
-    const existingUser = await AppUser.findOne({ email });
+    const existingUser = await AppUser.findOne({ email: req.body.email });
     if (existingUser) {
       return res.status(400).send("AppUser already exists");
     }
     const appUser = new AppUser({
-      name,
-      surname,
-      email,
-      phone,
-      password,
+      ...req.body,
     });
     await appUser.save();
-    const token = jwt.sign({ email: appUser.email, id: appUser._id }, "test", {
-      expiresIn: "1h",
-    });
-    res.status(201).json({ token });
+    const token = jwt.sign(
+      { email: appUser.email, id: appUser._id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1w",
+      }
+    );
+
+    req.session = { jwt: token };
+    res.status(201).json({ appUser });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -47,16 +47,21 @@ AppUserRouter.post("/login", async (req, res) => {
     if (!appUser) {
       return res.status(444).send("AppUser does not exist");
     }
-    const isPasswordCorrect = await bcrypt.compare(password, appUser.password);
+    const isPasswordCorrect = await bcrypt.compare(password, appUser.password); //Todo service
     if (!isPasswordCorrect) {
       return res.status(400).send("Invalid credentials");
     }
-    console.log({ pass: password, truePass: isPasswordCorrect });
+    // console.log({ pass: password, truePass: isPasswordCorrect });
 
-    const token = jwt.sign({ email: appUser.email, id: appUser._id }, "test", {
-      expiresIn: "1d",
-    });
-    res.status(200).json({ appUser, token });
+    const token = jwt.sign(
+      { email: appUser.email, id: appUser._id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1w",
+      }
+    );
+    req.session = { jwt: token };
+    res.status(200).json({ appUser });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -83,38 +88,43 @@ AppUserRouter.get(
 AppUserRouter.get("/users/:id", async (req, res) => {
   try {
     const appUser = await AppUser.findById(req.params.id);
-    if (!alertppUser) {
+    if (!appUser) {
       return res.status(404).send("AppUser not found");
     }
-    res.json(appUser);
+    res.json({ appUser });
   } catch (error) {
-    res.status(500).send("Error fetching AppUser");
+    res.status(500).send({ message: error.message });
   }
 });
 
 // UPDATE a AppUser
-AppUserRouter.patch("/users/:id", async (req, res) => {
+AppUserRouter.patch("/users", authMiddleware, async (req, res) => {
   try {
     const updatedUser = await AppUser.findByIdAndUpdate(
-      req.params.id,
+      req.appUser.id,
       req.body,
       {
         new: true,
+        runValidators: true,
       }
     );
     res.json(updatedUser);
   } catch (error) {
-    res.status(500).send("Error updating AppUser");
+    res.status(500).send({ error: error.message });
   }
 });
 
 // DELETE a AppUser
-AppUserRouter.delete("/users/:id", async (req, res) => {
+AppUserRouter.delete("/users", authMiddleware, async (req, res) => {
   try {
-    await AppUser.findByIdAndDelete(req.params.id);
-    res.send("AppUser deleted");
+    const appUser = await AppUser.findByIdAndDelete(req.appUser.id);
+    if (!appUser) {
+      return res.status(404).send("AppUser not found");
+    }
+    req.session = null;
+    res.send({ "AppUser ": appUser });
   } catch (error) {
-    res.status(500).send("Error deleting AppUser");
+    res.status(500).send({ message: error.message });
   }
 });
 
