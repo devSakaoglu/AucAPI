@@ -19,11 +19,6 @@ const authMiddleware = async (req, res, next) => {
     console.log("Payload", payload);
     // const token = req.headers.authorization.replace("Bearer ", "");
 
-    // if (!token) {
-    //   return res.status(401).json({ message: "Unauthorized" });
-    // }
-
-    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const appUser = await AppUser.findOne({ _id: payload.id });
     if (!appUser) {
       return res.status(404).send("AppUser does not exist");

@@ -9,7 +9,7 @@ dotenv.config();
 const AppUserRouter = express.Router();
 AppUserRouter.use(express.json());
 
-// SIGNUP Endpoint
+// Router Test Endpoint
 AppUserRouter.get("/login", (req, res) => {
   res.json("Login working");
 });

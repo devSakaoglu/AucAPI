@@ -75,6 +75,22 @@ const AppUserSchema = new mongoose.Schema({
     required: false,
     default: [],
   },
+  address: {
+    type: [String],
+    required: false,
+    default: "",
+  },
+  Address: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Address",
+    required: false,
+    default: [],
+  },
+  role: {
+    type: String,
+    required: true,
+    default: "AppUserRole",
+  },
 });
 AppUserSchema.pre("save", async function (next) {
   const user = this;

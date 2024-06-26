@@ -14,7 +14,12 @@ app.use(
     sameSite: "lax",
   })
 );
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use("/api", AppUserRouter);
 app.use("/api/bids", BidRouter);
 app.use("/api", ProductRouter);
@@ -24,7 +29,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Hello World!" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT || 5000, () => {
   console.log("JWT_SECRET :", process.env.JWT_SECRET);
   console.log(`Server is running on http://localhost:${PORT}`);
 });
