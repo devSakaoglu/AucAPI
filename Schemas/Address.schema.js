@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import validator from "validator";
 
-const addressSchema = new mongoose.Schema({
+const AddressSchema = new mongoose.Schema({
   city: {
     type: String,
     required: true,
@@ -48,4 +48,4 @@ const addressSchema = new mongoose.Schema({
   },
 });
 
-export default addressSchema;
+export default AddressSchema;

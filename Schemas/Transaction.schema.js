@@ -1,20 +1,29 @@
 import mongoose from "mongoose";
+import validator from "validator";
+const TransactionStatus = {
+  default: "default",
+  Pending: "Pending",
+  Completed: "Completed",
+  Cancelled: "Cancelled",
+};
+Object.freeze(TransactionStatus);
 
+const TransactionStatuses = Object.values(TransactionStatus);
 const TransactionSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
-    required: true,
+    required: false,
   },
   buyer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "AppUser",
-    required: true,
+    required: false,
   },
   seller: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "AppUser",
-    required: true,
+    required: false,
   },
   price: {
     type: Number,
@@ -28,40 +37,32 @@ const TransactionSchema = new mongoose.Schema({
   modifiedDate: {
     type: Date,
     required: true,
-    default: null,
+    default: Date.now,
   },
   status: {
-    type: Object.values(TransactionStatus),
+    enum: TransactionStatuses,
+    type: String,
     required: true,
-    default: TransactionStatus.Pending,
+    default: TransactionStatus.default,
   },
 });
-const TransactionStatus = {
-  default: "default",
-  Pending: "Pending",
-  Completed: "Completed",
-  Cancelled: "Cancelled",
-};
-export default { TransactionSchema, TransactionStatus };
 
-//update modified date
-TransactionSchema.methods.updateModifiedDate = async function () {
+//method defination
+
+TransactionSchema.method("pendingTransaction", async function () {
+  try {
+    this.status = TransactionStatus.Pending;
+    console.log("Transaction is pending");
+    return true;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+});
+//
+TransactionSchema.pre("save", async function (next) {
   this.modifiedDate = Date.now();
-  await this.save();
-};
-TransactionSchema.methods.completeTransaction = async function () {
-  this.status = TransactionStatus.Completed;
-  await this.updateModifiedDate();
-};
-TransactionSchema.methods.cancelTransaction = async function () {
-  this.status = TransactionStatus.Cancelled;
-  await this.updateModifiedDate();
-};
-//update transaction
-TransactionSchema.methods.update = async function (data) {
-  Object.keys(data).forEach((key) => {
-    this[key] = data[key];
-  });
-  this.modifiedDate = Date.now();
-  await this.updateModifiedDate();
-};
+  next();
+});
+
+export { TransactionSchema, TransactionStatus };

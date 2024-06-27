@@ -40,7 +40,7 @@ const tags = [
   "Handmade",
 ];
 
-const productSchema = new mongoose.Schema({
+const ProductSchema = new mongoose.Schema({
   appUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "AppUser",
@@ -62,6 +62,10 @@ const productSchema = new mongoose.Schema({
   startPrice: {
     type: Number, //number check
     required: true,
+  },
+  lastBidPrice: {
+    type: Number,
+    required: false,
   },
 
   tags: {
@@ -90,6 +94,15 @@ const productSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  status: {
+    type: String,
+    required: true,
+    default: "Active",
+  },
+  images: {
+    type: [String],
+    required: false,
+  },
 });
 
-export default productSchema;
+export default ProductSchema;

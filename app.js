@@ -1,6 +1,7 @@
 import AppUserRouter from "./api/AppUserRouter.js";
 import BidRouter from "./api/BidRouteri.js";
 import ProductRouter from "./api/ProductRouter.js";
+import TransactionRouter from "./api/TransactionRouter.js";
 import express from "express";
 import cors from "cors";
 import cookieSession from "cookie-session";
@@ -23,6 +24,7 @@ app.use(
 app.use("/api", AppUserRouter);
 app.use("/api/bids", BidRouter);
 app.use("/api", ProductRouter);
+app.use("/api/transaction", TransactionRouter);
 
 // Define your routes and middleware here
 app.get("/", (req, res) => {
