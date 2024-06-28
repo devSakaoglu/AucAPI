@@ -103,7 +103,7 @@ const AppUserSchema = new mongoose.Schema({
   },
 });
 AppUserSchema.pre("save", async function (next) {
-  if (user.isModified("password")) {
+  if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);
   }
   this.modifiedDate = Date.now();

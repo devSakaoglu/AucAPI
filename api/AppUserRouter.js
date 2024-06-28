@@ -23,6 +23,7 @@ AppUserRouter.post("/signup", async (req, res) => {
     const appUser = new AppUser({
       ...req.body,
     });
+    console.log({ ...req.body });
     await appUser.save();
     const token = jwt.sign(
       { email: appUser.email, id: appUser._id },
