@@ -14,7 +14,7 @@ TransactionRouter.get("/test", (req, res) => {
 });
 
 // Create Transaction
-TransactionRouter.post("/createLast", async (req, res) => {
+TransactionRouter.post("/transactions", async (req, res) => {
   try {
     const { productId, price, sellerId } = req.body;
     const product = await Product.findById(productId);

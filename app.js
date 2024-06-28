@@ -23,8 +23,8 @@ app.use(
 );
 app.use("/api", AppUserRouter);
 app.use("/api/bids", BidRouter);
-app.use("/api", ProductRouter);
-app.use("/api/transaction", TransactionRouter);
+app.use("/api/products", ProductRouter);
+app.use("/api/transactions", TransactionRouter);
 
 // Define your routes and middleware here
 app.get("/", (req, res) => {

@@ -5,7 +5,7 @@ import { AppUser } from "../Db.js";
 const ProductRouter = express.Router();
 
 // Add a new product
-ProductRouter.post("/product", authMiddleware, async (req, res) => {
+ProductRouter.post("/products/create", authMiddleware, async (req, res) => {
   try {
     const newProduct = new Product({
       ...req.body,
@@ -23,7 +23,7 @@ ProductRouter.post("/product", authMiddleware, async (req, res) => {
   }
 });
 // Get all products
-ProductRouter.get("/product", async (req, res) => {
+ProductRouter.get("/products", async (req, res) => {
   try {
     const products = await Product.find({});
     res.status(200).send(products);
@@ -41,7 +41,7 @@ ProductRouter.get("/products/me", authMiddleware, async (req, res) => {
 });
 
 // Get a product by ID
-ProductRouter.get("/product/:id", async (req, res) => {
+ProductRouter.get("/products/:id", async (req, res) => {
   try {
     console.log(req.params.id);
     const product = await Product.findById(req.params.id);
@@ -61,7 +61,7 @@ ProductRouter.get("/product/:id", async (req, res) => {
 });
 
 // Update a product
-ProductRouter.patch("/product:id", authMiddleware, async (req, res) => {
+ProductRouter.patch("/products:id", authMiddleware, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "name",
@@ -94,7 +94,7 @@ ProductRouter.patch("/product:id", authMiddleware, async (req, res) => {
 });
 
 // Delete a product
-ProductRouter.delete("/product:id", async (req, res) => {
+ProductRouter.delete("/products:id", async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) {
@@ -107,7 +107,7 @@ ProductRouter.delete("/product:id", async (req, res) => {
 });
 
 //Search by tag
-ProductRouter.get("/product/search", async (req, res) => {
+ProductRouter.get("/products/search", async (req, res) => {
   try {
     // Retrieve the tag from query parameters
     const { tag } = req.query;
