@@ -34,7 +34,8 @@ ProductRouter.get("/product", async (req, res) => {
 ProductRouter.get("/products/me", authMiddleware, async (req, res) => {
   try {
     const products = await Product.find({ appUser: req.appUser._id });
-    res.status(200).send(products);
+    const produtcs2 = [products, products];
+    res.status(200).send(produtcs2);
   } catch (error) {
     res.status(500).send(error);
   }

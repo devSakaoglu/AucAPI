@@ -19,6 +19,16 @@ const BidScheme = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  createdDate: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  modifiedDate: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 });
 
 export default BidScheme;

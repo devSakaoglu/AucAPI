@@ -46,6 +46,16 @@ const AddressSchema = new mongoose.Schema({
       message: "Country name is not valid",
     },
   },
+  createdDate: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  modifiedDate: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 });
 
 export default AddressSchema;

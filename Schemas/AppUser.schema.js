@@ -91,12 +91,22 @@ const AppUserSchema = new mongoose.Schema({
     required: true,
     default: "AppUserRole",
   },
+  createdDate: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  modifiedDate: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 });
 AppUserSchema.pre("save", async function (next) {
-  const user = this;
   if (user.isModified("password")) {
-    user.password = await bcrypt.hash(user.password, 10);
+    this.password = await bcrypt.hash(this.password, 10);
   }
+  this.modifiedDate = Date.now();
   next();
 });
 AppUserSchema.methods.toJSON = function () {

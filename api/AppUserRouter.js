@@ -67,6 +67,12 @@ AppUserRouter.post("/login", async (req, res) => {
   }
 });
 
+// LOGOUT Endpoint
+AppUserRouter.post("/logout", (req, res) => {
+  req.session = null;
+  res.status(200).send({ message: "Logout successful" });
+});
+
 // CRUD Endpoints for AppUser
 // GET all users
 AppUserRouter.get(

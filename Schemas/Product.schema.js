@@ -86,14 +86,6 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: false,
   },
-  createTime: {
-    type: Date,
-    default: Date.now,
-  },
-  modifiedTime: {
-    type: Date,
-    default: Date.now,
-  },
   status: {
     type: String,
     required: true,
@@ -102,6 +94,16 @@ const ProductSchema = new mongoose.Schema({
   images: {
     type: [String],
     required: false,
+  },
+  createdDate: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  modifiedDate: {
+    type: Date,
+    required: true,
+    default: Date.now,
   },
 });
 

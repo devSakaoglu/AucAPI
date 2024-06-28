@@ -49,11 +49,15 @@ TransactionRouter.post("/createLast", async (req, res) => {
   }
 });
 TransactionRouter.post("/createTest", authMiddleware, async (req, res) => {
-  const transaction = new Transaction({
-    ...req.body,
-  });
   try {
-    const testvalue = await transaction.pendingTransaction();
+    const transaction = new Transaction({
+      buyer: req.appUser._id,
+      price: req.body.price,
+      product: req.body.product,
+      seller: req.body.seller || (await AppUser.findOne({ role: "AppUser" })),
+    });
+
+    const testvalue = await transaction.changeStatus(TransactionStatus.Pending);
     console.log({ test: testvalue });
     await transaction.save();
     res.status(201).json({ transaction });
