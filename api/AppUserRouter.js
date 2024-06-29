@@ -3,8 +3,6 @@ import jwt from "jsonwebtoken";
 import { AppUser } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
-dotenv.config();
 
 const AppUserRouter = express.Router();
 AppUserRouter.use(express.json());

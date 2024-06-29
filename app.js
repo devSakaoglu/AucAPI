@@ -1,10 +1,13 @@
 import AppUserRouter from "./api/AppUserRouter.js";
-import BidRouter from "./api/BidRouteri.js";
+import BidRouter from "./api/BidRouter.js";
 import ProductRouter from "./api/ProductRouter.js";
 import TransactionRouter from "./api/TransactionRouter.js";
 import express from "express";
 import cors from "cors";
 import cookieSession from "cookie-session";
+import dotenv from "dotenv";
+dotenv.config();
+
 const PORT = 5000;
 const app = express();
 app.use(express.json());

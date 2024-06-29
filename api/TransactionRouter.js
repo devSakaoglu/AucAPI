@@ -2,8 +2,6 @@ import express from "express";
 import { AppUser, Transaction, Product } from "../Db.js";
 import { TransactionStatus } from "../Schemas/Transaction.schema.js";
 import authMiddleware from "./midleware/auth.js";
-import dotenv from "dotenv";
-dotenv.config();
 
 const TransactionRouter = express.Router();
 TransactionRouter.use(express.json());

@@ -1,8 +1,8 @@
 // auth.js
 import jwt from "jsonwebtoken";
 import { AppUser } from "../../Db.js";
-import dotenv from "dotenv";
-dotenv.config();
+// import dotenv from "dotenv";
+// dotenv.config();
 // Import any necessary dependencies
 // For example, if you're using Express.js:
 // const jwt = require('jsonwebtoken');
