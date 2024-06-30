@@ -2,7 +2,6 @@ import express from "express";
 import { Product } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
 import upload from "./midleware/file.js";
-import sharp from "sharp";
 
 const ProductRouter = express.Router();
 const Day = 1000 * 60 * 60 * 24;
