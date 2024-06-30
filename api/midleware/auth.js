@@ -16,7 +16,7 @@ const authMiddleware = async (req, res, next) => {
   }
   try {
     const payload = jwt.verify(req.session.jwt, process.env.JWT_SECRET);
-    console.log("Payload", payload);
+    // console.log("Payload", payload);
     // const token = req.headers.authorization.replace("Bearer ", "");
 
     const appUser = await AppUser.findOne({ _id: payload.id });

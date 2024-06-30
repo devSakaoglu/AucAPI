@@ -69,7 +69,7 @@ const ProductSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
+    required: false,
   },
   startPrice: {
     type: Number, //number check
@@ -104,12 +104,10 @@ const ProductSchema = new mongoose.Schema({
     required: true,
     default: productStatus.active,
   },
-  images: [
-    {
-      data: Buffer,
-      contentType: String,
-    },
-  ],
+  images: {
+    type: [Buffer],
+    required: false,
+  },
   createdDate: {
     type: Date,
     required: true,
@@ -138,13 +136,9 @@ const ProductSchema = new mongoose.Schema({
   },
 });
 
-ProductSchema.pre("save", function (next) {
-  this.modifiedDate = Date.now();
-  next();
-});
-ProductSchema.pre("updateOne", function (next) {
-  this.modifiedDate = Date.now();
-  next();
-});
+// ProductSchema.pre("save", function (next) {
+//   this.modifiedDate = Date.now();
+//   next();
+// });
 
 export default ProductSchema;

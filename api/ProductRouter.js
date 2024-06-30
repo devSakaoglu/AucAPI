@@ -1,34 +1,76 @@
 import express from "express";
 import { Product } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
-import { AppUser } from "../Db.js";
+import multer, { diskStorage } from "multer";
 import upload from "./midleware/file.js";
+import sharp from "sharp";
+
 const ProductRouter = express.Router();
 const Day = 1000 * 60 * 60 * 24;
 
-// Add a new product
+// Consider and implement the following routes:
+ProductRouter.get(
+  "/getImages/:id",
+  /*authMiddleware*/ async (req, res) => {
+    let Images = [];
+    try {
+      const product = await Product.findById(req.params.id);
+      if (!product || !product.images) {
+        throw new Error("No product found");
+      }
+      res.set("Content-Type", "image/png");
+      product.images.forEach((image) => {
+        Images.push(image.toString("base64"));
+      });
+
+      // res.send({ Images });
+
+      res.status(200).send(Images);
+    } catch (error) {
+      res.status(500).send;
+    }
+  }
+);
+//
 ProductRouter.post(
-  "/",
+  "/", // test it again
+  upload.array("images"),
+
   authMiddleware,
-  // upload.array("images", 10),
   async (req, res) => {
     try {
+      console.log(req.body);
+      console.log(req.files);
+      const images = await Promise.all(
+        req.files.map(
+          async (file) =>
+            await sharp(file.buffer)
+              .resize({ width: 250, height: 250 })
+              .png()
+              .toBuffer()
+        )
+      );
+      console.log(images);
       const newProduct = new Product({
         ...req.body,
+        quantity: Number(req.body.quantity) || 1,
+        startPrice: Number(req.body.startPrice) || 0,
+        auctionDuration: Number(req.body.auctionDuration) || 1,
         appUser: req.appUser._id,
-
         auctionEndDate: new Date(
           Date.now() + Day * (req.body.auctionDuration || 1)
         ),
-        // images: req.files.map((file) => ({
-        //   data: file.buffer,
-        //   contentType: file.mimetype,
-        // })),
+        images: images,
       });
+
       await newProduct.save();
+      // Remove images from the newProduct object
+      newProduct.images = null;
+
       res.status(201).send({ newProduct });
     } catch (error) {
-      res.status(400).send(error);
+      console.log(error);
+      res.status(400).send(error.message);
     }
   }
 );

@@ -6,11 +6,14 @@ import express from "express";
 import cors from "cors";
 import cookieSession from "cookie-session";
 import dotenv from "dotenv";
+import bodyParser from "body-parser";
 dotenv.config();
 
 const PORT = 5000;
 const app = express();
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(express.json());
 app.use(
   cookieSession({
     signed: false,
