@@ -2,28 +2,38 @@ import express from "express";
 import { Product } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
 import { AppUser } from "../Db.js";
+import upload from "./midleware/file.js";
 const ProductRouter = express.Router();
+const Day = 1000 * 60 * 60 * 24;
 
 // Add a new product
-ProductRouter.post("/products/create", authMiddleware, async (req, res) => {
-  try {
-    const newProduct = new Product({
-      ...req.body,
-      appUser: req.appUser._id,
-    });
-    await newProduct.save();
+ProductRouter.post(
+  "/",
+  authMiddleware,
+  // upload.array("images", 10),
+  async (req, res) => {
+    try {
+      const newProduct = new Product({
+        ...req.body,
+        appUser: req.appUser._id,
 
-    // const appUser = await AppUser.findById(req.appUser._id);
-    // appUser.listedProducts.push(newProduct._id);
-    // await appUser.save();
-
-    res.status(201).send({ newProduct });
-  } catch (error) {
-    res.status(400).send(error);
+        auctionEndDate: new Date(
+          Date.now() + Day * (req.body.auctionDuration || 1)
+        ),
+        // images: req.files.map((file) => ({
+        //   data: file.buffer,
+        //   contentType: file.mimetype,
+        // })),
+      });
+      await newProduct.save();
+      res.status(201).send({ newProduct });
+    } catch (error) {
+      res.status(400).send(error);
+    }
   }
-});
+);
 // Get all products
-ProductRouter.get("/products", async (req, res) => {
+ProductRouter.get("/", async (req, res) => {
   try {
     const products = await Product.find({});
     res.status(200).send(products);
@@ -31,7 +41,7 @@ ProductRouter.get("/products", async (req, res) => {
     res.status(500).send(error);
   }
 });
-ProductRouter.get("/products/me", authMiddleware, async (req, res) => {
+ProductRouter.get("/me", authMiddleware, async (req, res) => {
   try {
     const products = await Product.find({ appUser: req.appUser._id });
     res.status(200).send(products);
@@ -41,7 +51,7 @@ ProductRouter.get("/products/me", authMiddleware, async (req, res) => {
 });
 
 // Get a product by ID
-ProductRouter.get("/products/:id", async (req, res) => {
+ProductRouter.get("/:id", async (req, res) => {
   try {
     console.log(req.params.id);
     const product = await Product.findById(req.params.id);
@@ -61,7 +71,7 @@ ProductRouter.get("/products/:id", async (req, res) => {
 });
 
 // Update a product
-ProductRouter.patch("/products:id", authMiddleware, async (req, res) => {
+ProductRouter.patch(":id", authMiddleware, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "name",
@@ -94,7 +104,7 @@ ProductRouter.patch("/products:id", authMiddleware, async (req, res) => {
 });
 
 // Delete a product
-ProductRouter.delete("/products:id", async (req, res) => {
+ProductRouter.delete(":id", async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) {
@@ -107,7 +117,7 @@ ProductRouter.delete("/products:id", async (req, res) => {
 });
 
 //Search by tag
-ProductRouter.get("/products/search", async (req, res) => {
+ProductRouter.get("/search", async (req, res) => {
   try {
     // Retrieve the tag from query parameters
     const { tag } = req.query;
@@ -123,7 +133,7 @@ ProductRouter.get("/products/search", async (req, res) => {
 });
 
 // Search products by name or description
-ProductRouter.get("/products/searchByNameOrDescription", async (req, res) => {
+ProductRouter.get("/searchByNameOrDescription", async (req, res) => {
   try {
     const { query } = req.query;
     // Using a regular expression to perform a case-insensitive and partial match search
@@ -140,6 +150,21 @@ ProductRouter.get("/products/searchByNameOrDescription", async (req, res) => {
     res.status(200).send(products);
   } catch (error) {
     res.status(500).send(error);
+  }
+});
+ProductRouter.post("/test", authMiddleware, async (req, res) => {
+  try {
+    const newProduct = new Product({
+      ...req.body,
+      appUser: req.appUser._id,
+      auctionEndDate: new Date(
+        Date.now() + Day * (req.body.auctionDuration || 1)
+      ),
+    });
+    await newProduct.save();
+    res.status(201).send({ newProduct });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
   }
 });
 

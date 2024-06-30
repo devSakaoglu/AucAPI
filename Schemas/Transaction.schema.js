@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
 const TransactionStatus = Object.freeze({
-  default: "default",
   Pending: "Pending",
   Completed: "Completed",
   Cancelled: "Cancelled",
@@ -28,10 +27,10 @@ const TransactionSchema = new mongoose.Schema({
     required: true,
   },
   status: {
-    enum: TransactionStatus,
+    enum: Object.values(TransactionStatus),
     type: String,
     required: true,
-    default: TransactionStatus.default,
+    default: TransactionStatus.Pending,
   },
   createdDate: {
     type: Date,

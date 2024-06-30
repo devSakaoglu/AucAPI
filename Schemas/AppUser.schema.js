@@ -1,6 +1,11 @@
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import validator from "validator";
+const UserRole = Object.freeze({
+  AppUser: "AppUserRole",
+  SupportUser: "SupportUser",
+  Admin: "AdminRole",
+});
 
 const AppUserSchema = new mongoose.Schema({
   name: {
@@ -76,21 +81,22 @@ const AppUserSchema = new mongoose.Schema({
     required: false,
     default: [],
   },
-  address: {
+  addresses: {
     type: [String],
     required: false,
     default: "",
   },
-  Address: {
+  Addresses: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Address",
     required: false,
     default: [],
   },
   role: {
+    enum: Object.values(UserRole),
     type: String,
     required: true,
-    default: "AppUserRole",
+    default: UserRole.AppUser,
   },
   createdDate: {
     type: Date,

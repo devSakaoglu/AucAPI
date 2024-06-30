@@ -1,5 +1,17 @@
 import mongoose from "mongoose";
-
+import validator from "validator";
+const auctionDuration = Object.freeze({
+  oneDay: 1,
+  oneWeek: 7,
+  oneMonth: 30,
+});
+const productStatus = Object.freeze({
+  active: "Active",
+  inactive: "Inactive",
+  sold: "Sold",
+  expired: "Expired",
+  deleted: "Deleted",
+});
 const tags = [
   "New",
   "Used",
@@ -86,15 +98,18 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: false,
   },
-  status: {
+  productStatus: {
+    enum: Object.values(productStatus),
     type: String,
     required: true,
-    default: "Active",
+    default: productStatus.active,
   },
-  images: {
-    type: [String],
-    required: false,
-  },
+  images: [
+    {
+      data: Buffer,
+      contentType: String,
+    },
+  ],
   createdDate: {
     type: Date,
     required: true,
@@ -105,6 +120,31 @@ const ProductSchema = new mongoose.Schema({
     required: true,
     default: Date.now,
   },
+  auctionStartDate: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  auctionDuration: {
+    enum: Object.values(auctionDuration),
+    type: String,
+    required: true,
+    default: auctionDuration.oneDay,
+  },
+  auctionEndDate: {
+    type: Date,
+    required: true,
+    default: Date.now(),
+  },
+});
+
+ProductSchema.pre("save", function (next) {
+  this.modifiedDate = Date.now();
+  next();
+});
+ProductSchema.pre("updateOne", function (next) {
+  this.modifiedDate = Date.now();
+  next();
 });
 
 export default ProductSchema;
