@@ -1,7 +1,6 @@
 import express from "express";
 import { Product } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
-import multer, { diskStorage } from "multer";
 import upload from "./midleware/file.js";
 import sharp from "sharp";
 
@@ -9,48 +8,19 @@ const ProductRouter = express.Router();
 const Day = 1000 * 60 * 60 * 24;
 
 // Consider and implement the following routes:
-ProductRouter.get(
-  "/getImages/:id",
-  /*authMiddleware*/ async (req, res) => {
-    let Images = [];
-    try {
-      const product = await Product.findById(req.params.id);
-      if (!product || !product.images) {
-        throw new Error("No product found");
-      }
-      res.set("Content-Type", "image/png");
-      product.images.forEach((image) => {
-        Images.push(image.toString("base64"));
-      });
 
-      // res.send({ Images });
-
-      res.status(200).send(Images);
-    } catch (error) {
-      res.status(500).send;
-    }
-  }
-);
-//
 ProductRouter.post(
-  "/", // test it again
+  "/",
+  authMiddleware,
   upload.array("images"),
 
-  authMiddleware,
   async (req, res) => {
     try {
-      console.log(req.body);
-      console.log(req.files);
       const images = await Promise.all(
-        req.files.map(
-          async (file) =>
-            await sharp(file.buffer)
-              .resize({ width: 250, height: 250 })
-              .png()
-              .toBuffer()
-        )
+        req.files.map(async (file) => {
+          return file.filename;
+        })
       );
-      console.log(images);
       const newProduct = new Product({
         ...req.body,
         quantity: Number(req.body.quantity) || 1,
@@ -61,12 +31,9 @@ ProductRouter.post(
           Date.now() + Day * (req.body.auctionDuration || 1)
         ),
         images: images,
+        s,
       });
-
       await newProduct.save();
-      // Remove images from the newProduct object
-      newProduct.images = null;
-
       res.status(201).send({ newProduct });
     } catch (error) {
       console.log(error);
@@ -74,6 +41,7 @@ ProductRouter.post(
     }
   }
 );
+
 // Get all products
 ProductRouter.get("/", async (req, res) => {
   try {
@@ -83,6 +51,7 @@ ProductRouter.get("/", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
 ProductRouter.get("/me", authMiddleware, async (req, res) => {
   try {
     const products = await Product.find({ appUser: req.appUser._id });

@@ -11,14 +11,17 @@ const BidScheme = new mongoose.Schema({
     ref: "Product",
     required: true,
   },
+  sellerUser: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "AppUser",
+    required: true,
+  },
+
   bidPrice: {
     type: Number,
     required: true,
   },
-  bidTime: {
-    type: Date,
-    default: Date.now,
-  },
+
   createdDate: {
     type: Date,
     required: true,

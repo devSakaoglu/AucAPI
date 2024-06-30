@@ -25,6 +25,11 @@ const TransactionSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
+    validator: (value) => {
+      if (value < 0 && value < 1000000) {
+        throw new Error("Price must be a positive number");
+      }
+    },
   },
   status: {
     enum: Object.values(TransactionStatus),

@@ -105,7 +105,7 @@ const ProductSchema = new mongoose.Schema({
     default: productStatus.active,
   },
   images: {
-    type: [Buffer],
+    type: [String],
     required: false,
   },
   createdDate: {
@@ -136,9 +136,9 @@ const ProductSchema = new mongoose.Schema({
   },
 });
 
-// ProductSchema.pre("save", function (next) {
-//   this.modifiedDate = Date.now();
-//   next();
-// });
+ProductSchema.pre("save", function (next) {
+  this.modifiedDate = Date.now();
+  next();
+});
 
 export default ProductSchema;

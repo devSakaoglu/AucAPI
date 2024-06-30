@@ -1,12 +1,22 @@
 import express from "express";
-import { Bid } from "../Db.js";
+import { Bid, AppUser, Product } from "../Db.js";
+import authMiddleware from "./midleware/auth.js";
 
 const BidRouter = express.Router();
 BidRouter.use(express.json());
 
-BidRouter.post("/", async (req, res) => {
+BidRouter.post("/", authMiddleware, async (req, res) => {
   try {
-    const newBid = new Bid(req.body);
+    const sellerUser = await Product.findById(req.body.product).populate(
+      "appUser"
+    );
+    const newBid = new Bid({
+      appUser: req.appUser._id,
+      product: req.body.product,
+      bidPrice: req.body.bidPrice,
+      sellerUser: sellerUser.appUser._id,
+    });
+
     const savedBid = await newBid.save();
     res.status(201).json(savedBid);
   } catch (error) {
@@ -53,9 +63,9 @@ BidRouter.patch("/:id", async (req, res) => {
     if (req.body.bidPrice != null) {
       bid.bidPrice = req.body.bidPrice;
     }
-    if (req.body.bidTime != null) {
-      bid.bidTime = req.body.bidTime;
-    }
+    // if (req.body.bidTime != null) {
+    //   bid.bidTime = req.body.bidTime;
+    // }
     const updatedBid = await bid.save();
     res.json(updatedBid);
   } catch (error) {
