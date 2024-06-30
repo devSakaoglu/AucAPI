@@ -24,7 +24,5 @@ const Bid = mongoose.model("Bid", BidSchema);
 const Product = mongoose.model("Product", ProductSchema);
 const Address = mongoose.model("Address", AddressSchema);
 const Transaction = mongoose.model("Transaction", TransactionSchema);
-//Testmodels
-const TransactionTest = mongoose.model("TransactionTest", TransactionSchema);
 
-export { AppUser, Bid, Product, Address, Transaction, TransactionTest };
+export { AppUser, Bid, Product, Address, Transaction };

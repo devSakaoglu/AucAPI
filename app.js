@@ -7,6 +7,7 @@ import cors from "cors";
 import cookieSession from "cookie-session";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
+import axios from "axios";
 dotenv.config();
 
 const PORT = 5000;
@@ -32,6 +33,18 @@ app.use("/api", AppUserRouter);
 app.use("/api/bids", BidRouter);
 app.use("/api/products", ProductRouter);
 app.use("/api/transactions", TransactionRouter);
+
+const checkProductStatus = async () => {
+  axios
+    .get("http://localhost:5000/api/products/status")
+    .then((res) => {
+      console.log("Product status monitoring started.");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+setInterval(checkProductStatus, 1 * 5 * 1000);
 
 // Define your routes and middleware here
 app.get("/", (req, res) => {

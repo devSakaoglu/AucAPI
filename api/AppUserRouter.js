@@ -11,8 +11,10 @@ AppUserRouter.use(express.json());
 AppUserRouter.get("/login", (req, res) => {
   res.json("Login working");
 });
+AppUserRouter.get("/me", authMiddleware, (req, res) => {
+  res.json(req.appUser);
+});
 AppUserRouter.post("/signup", async (req, res) => {
-  // const { email, password, name, surname, phone } = req.body;
   try {
     const existingUser = await AppUser.findOne({ email: req.body.email });
     if (existingUser) {
@@ -50,7 +52,6 @@ AppUserRouter.post("/login", async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(400).send("Invalid credentials");
     }
-    // console.log({ pass: password, truePass: isPasswordCorrect });
 
     const token = jwt.sign(
       { email: appUser.email, id: appUser._id },
@@ -72,7 +73,6 @@ AppUserRouter.post("/logout", (req, res) => {
   res.status(200).send({ message: "Logout successful" });
 });
 
-// CRUD Endpoints for AppUser
 // GET all users
 AppUserRouter.get(
   "/users",

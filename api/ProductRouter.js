@@ -1,5 +1,5 @@
 import express from "express";
-import { Product } from "../Db.js";
+import { AppUser, Product } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
 import upload from "./midleware/file.js";
 
@@ -7,6 +7,23 @@ const ProductRouter = express.Router();
 const Day = 1000 * 60 * 60 * 24;
 
 // Consider and implement the following routes:
+ProductRouter.get("/status", async (req, res) => {
+  try {
+    await Product.updateMany(
+      {
+        productStatus: "Active",
+        auctionEndDate: { $lt: new Date(Date.now()).toISOString() },
+      },
+      { productStatus: "Inactive" }
+    );
+    console.log("Status updated");
+
+    res.status(200).send({ message: "Status updated" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+});
 
 ProductRouter.post(
   "/",
@@ -30,9 +47,11 @@ ProductRouter.post(
           Date.now() + Day * (req.body.auctionDuration || 1)
         ),
         images: images,
-        s,
       });
       await newProduct.save();
+      req.appUser.listedProducts.push(newProduct._id);
+      await req.appUser.save();
+
       res.status(201).send({ newProduct });
     } catch (error) {
       console.log(error);
@@ -44,7 +63,9 @@ ProductRouter.post(
 // Get all products
 ProductRouter.get("/", async (req, res) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({
+      auctionEndDate: { $gte: new Date(Date.now()).toISOString() },
+    });
     res.status(200).send(products);
   } catch (error) {
     res.status(500).send(error);
@@ -177,5 +198,20 @@ ProductRouter.post("/test", authMiddleware, async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+
+// async function checkProductStatus() {
+//   // Durumu güncellenmesi gereken ürünleri bul
+//   const products = await Product.find({
+//     status: "active",
+//     expiresAt: { $lt: now },
+//   });
+
+//   // Bulunan ürünlerin durumunu 'inactive' olarak güncelle
+//   for (const product of products) {
+//     product.status = "inactive";
+//     await product.save();
+//     console.log(`Product ${product.name} status updated to inactive.`);
+//   }
+// }
 
 export default ProductRouter;
