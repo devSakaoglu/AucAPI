@@ -65,7 +65,7 @@ ProductRouter.get("/", async (req, res) => {
   try {
     const products = await Product.find({
       auctionEndDate: { $gte: new Date(Date.now()).toISOString() },
-    });
+    }).select({ appUser: 0 });
     res.status(200).send(products);
   } catch (error) {
     res.status(500).send(error);
@@ -75,8 +75,8 @@ ProductRouter.get("/", async (req, res) => {
 ProductRouter.get("/me", authMiddleware, async (req, res) => {
   try {
     //Todo fix it products appUser id information
-    const products = await Product.find({ appUser: req.appUser._id }).populate({
-      select: { appUser: 0 },
+    const products = await Product.find({
+      appUser: req.appUser._id,
     });
     res.status(200).send(products);
   } catch (error) {
@@ -88,13 +88,20 @@ ProductRouter.get("/me", authMiddleware, async (req, res) => {
 ProductRouter.get("/:id", async (req, res) => {
   try {
     console.log(req.params.id);
-    const product = await Product.findById(req.params.id);
-    // product.populate("appUser").execPopulate();
-    // await product.populate("appUser", "-_id");
-    await product.populate({
-      path: "appUser",
-      select: { name: 1, surname: 1, _id: 1 },
-    });
+    const product = await Product.findById(req.params.id)
+      .populate({
+        path: "appUser",
+        select: "name surname", // appUser için sadece name ve surname alanlarını seçiyoruz
+      })
+      .populate({
+        path: "bids",
+        select: "-_id bidPrice",
+
+        populate: {
+          path: "appUser",
+          select: "-_id name surname", // bids içindeki sellerUser için sadece name ve surname alanlarını seçiyoruz
+        },
+      });
     if (!product) {
       return res.status(404).send();
     }
