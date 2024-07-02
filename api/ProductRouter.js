@@ -74,7 +74,10 @@ ProductRouter.get("/", async (req, res) => {
 
 ProductRouter.get("/me", authMiddleware, async (req, res) => {
   try {
-    const products = await Product.find({ appUser: req.appUser._id });
+    //Todo fix it products appUser id information
+    const products = await Product.find({ appUser: req.appUser._id }).populate({
+      select: { appUser: 0 },
+    });
     res.status(200).send(products);
   } catch (error) {
     res.status(500).send(error);
