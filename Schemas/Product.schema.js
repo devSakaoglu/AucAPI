@@ -79,7 +79,11 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: false,
   },
-
+  maxBidPrice: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
   tags: {
     type: [String], //string check
     required: false,
