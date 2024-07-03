@@ -106,17 +106,15 @@ ProductRouter.get("/:id", async (req, res) => {
       return res.status(404).send("Product not found.");
     }
 
-    // Function to obfuscate the name and surname and append ***
     function obfuscateNameSurname(user) {
       if (user && user.name) {
-        user.name = user.name.substring(0, 3) + "***";
+        user.name = user.name.substring(0, 1) + "***";
       }
       if (user && user.surname) {
-        user.surname = user.surname.substring(0, 3) + "***";
+        user.surname = user.surname.substring(0, 1) + "***";
       }
     }
 
-    // Obfuscate appUser fields in each bid
     product.bids.forEach((bid) => {
       obfuscateNameSurname(bid.appUser);
     });
