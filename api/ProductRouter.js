@@ -100,12 +100,14 @@ ProductRouter.get("/:id", async (req, res) => {
           path: "appUser",
           select: "-_id name surname",
         },
-      });
+      })
+      .lean(); // Convert document to plain JavaScript object
 
     if (!product) {
       return res.status(404).send("Product not found.");
     }
 
+    // Function to obfuscate the name and surname and append ***
     function obfuscateNameSurname(user) {
       if (user && user.name) {
         user.name = user.name.substring(0, 1) + "***";
@@ -115,9 +117,13 @@ ProductRouter.get("/:id", async (req, res) => {
       }
     }
 
+    // Obfuscate appUser fields in each bid
     product.bids.forEach((bid) => {
       obfuscateNameSurname(bid.appUser);
     });
+
+    // Sort bids by bidPrice
+    product.bids.sort((a, b) => b.bidPrice - a.bidPrice);
 
     res.status(200).send(product);
   } catch (error) {
