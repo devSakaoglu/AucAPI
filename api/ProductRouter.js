@@ -145,15 +145,21 @@ ProductRouter.patch(":id", authMiddleware, async (req, res) => {
 });
 
 // Delete a product
-ProductRouter.delete(":id", async (req, res) => {
+ProductRouter.delete("/:id", authMiddleware, async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
+    const products = await Product.find({ appUser: req.appUser._id });
+    const product = products.find((product) => product._id == req.params.id);
+
     if (!product) {
-      return res.status(404).send();
+      return res.status(404).send("Product not found.");
+    } else {
+      const result = await Product.findByIdAndDelete(req.params.id);
+      return res
+        .status(200)
+        .send({ message: "Product deleted successfully.", product });
     }
-    res.status(200).send(product);
   } catch (error) {
-    res.status(500).send(error);
+    return res.status(500).send(error);
   }
 });
 
