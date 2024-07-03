@@ -2,6 +2,7 @@ import AppUserRouter from "./api/AppUserRouter.js";
 import BidRouter from "./api/BidRouter.js";
 import ProductRouter from "./api/ProductRouter.js";
 import TransactionRouter from "./api/TransactionRouter.js";
+import AdressRouter from "./api/AddressRouter.js";
 import express from "express";
 import cors from "cors";
 import cookieSession from "cookie-session";
@@ -33,6 +34,7 @@ app.use("/api", AppUserRouter);
 app.use("/api/bids", BidRouter);
 app.use("/api/products", ProductRouter);
 app.use("/api/transactions", TransactionRouter);
+app.use("/api/addresses", AdressRouter);
 
 const checkProductStatus = async () => {
   axios

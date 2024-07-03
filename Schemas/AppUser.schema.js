@@ -87,16 +87,11 @@ const AppUserSchema = new mongoose.Schema({
     required: false,
     default: [],
   },
-  addresses: {
-    type: [String],
-    required: false,
-    default: "",
-  },
   Addresses: {
-    type: [mongoose.Schema.Types.ObjectId],
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Address",
     required: false,
-    default: [],
+    default: null,
   },
   role: {
     enum: Object.values(UserRole),

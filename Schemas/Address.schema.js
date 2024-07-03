@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import validator from "validator";
 
 const AddressSchema = new mongoose.Schema({
+  appUser: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "AppUser",
+    required: true,
+  },
   city: {
     type: String,
     required: true,
@@ -24,17 +29,7 @@ const AddressSchema = new mongoose.Schema({
       message: "Street name is not valid",
     },
   },
-  // zip: {
-  //   type: String,
-  //   required: true,
-  //   default: "",
-  //   // validator: {
-  //   //   validator: (value) => {
-  //   //     return !validator.isPostalCode(value, "any");
-  //   //   },
-  //   //   message: "Zip code is not valid",
-  //   // },
-  // },
+
   country: {
     type: String,
     required: true,
@@ -48,7 +43,7 @@ const AddressSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: True,
+    required: true,
     default: "",
   },
   createdDate: {
