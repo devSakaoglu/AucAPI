@@ -16,6 +16,14 @@ AppUserRouter.get("/me", authMiddleware, (req, res) => {
 });
 AppUserRouter.post("/signup", async (req, res) => {
   try {
+    console.log("Req Session row 19", {
+      session: req.session,
+      tpyeof: typeof req.session,
+    });
+    if (req.session?.jwt !== undefined) {
+      return res.status(400).send("Already logged in");
+    }
+
     const existingUser = await AppUser.findOne({ email: req.body.email });
     if (existingUser) {
       return res.status(400).send("AppUser already exists");
