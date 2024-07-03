@@ -68,18 +68,21 @@ AppUserRouter.post("/login", async (req, res) => {
 });
 
 // LOGOUT Endpoint
-AppUserRouter.post("/logout", authMiddleware, (req, res) => {
-  console.log("Session before logout :", req.session);
-  req.session = null;
-  console.log(
-    "Session is cleared :",
-    req.session == null
-      ? "Session is cleared"
-      : "There is a problem with the session"
-  );
+AppUserRouter.post(
+  "/logout",
+  /*authMiddleware ,*/ (req, res) => {
+    console.log("Session before logout :", req.session);
+    req.session = null;
+    console.log(
+      "Session is cleared :",
+      req.session == null
+        ? "session is empty"
+        : "There is a problem with the session"
+    );
 
-  res.status(200).send({ message: "Logout successful" });
-});
+    res.status(200).send({ message: "Logout successful" });
+  }
+);
 
 // GET all users
 AppUserRouter.get(
