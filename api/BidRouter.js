@@ -45,13 +45,12 @@ BidRouter.post("/:id", authMiddleware, async (req, res) => {
       bidPrice: 0,
     };
     if (req.body.bidPrice <= maxBid.bidPrice) {
-      return res
+      res
         .status(400)
         .json({ message: "Bid price is lower than max bid price" });
-    } else if (req.body.bidPrice <= product.startPrice) {
-      return res
-        .status(400)
-        .json({ message: "Bid price is lower than start price" });
+    }
+    if (req.body.bidPrice <= product.startPrice) {
+      res.status(400).json({ message: "Bid price is lower than start price" });
     }
 
     const newBid = new Bid({
