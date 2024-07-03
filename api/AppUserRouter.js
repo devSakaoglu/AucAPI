@@ -1,6 +1,6 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { AppUser, Product } from "../Db.js";
+import { AppUser, Product, Address } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
 import bcrypt from "bcrypt";
 
@@ -119,6 +119,25 @@ AppUserRouter.get(
     }
   }
 );
+AppUserRouter.post("/address", authMiddleware, async (req, res) => {
+  try {
+    const address = new Address({
+      ...req.body,
+    });
+
+    const newAdress = await address.save();
+
+    if (newAdress) {
+      await AppUser.findByIdAndUpdate(req.appUser.id, {
+        address: newAdress._id,
+      });
+    }
+
+    res.status(201).json({ address });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
 
 // GET a single AppUser by ID
 AppUserRouter.get("/users/:id", async (req, res) => {

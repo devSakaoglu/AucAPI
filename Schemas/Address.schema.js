@@ -24,17 +24,17 @@ const AddressSchema = new mongoose.Schema({
       message: "Street name is not valid",
     },
   },
-  zip: {
-    type: String,
-    required: true,
-    default: "",
-    // validator: {
-    //   validator: (value) => {
-    //     return !validator.isPostalCode(value, "any");
-    //   },
-    //   message: "Zip code is not valid",
-    // },
-  },
+  // zip: {
+  //   type: String,
+  //   required: true,
+  //   default: "",
+  //   // validator: {
+  //   //   validator: (value) => {
+  //   //     return !validator.isPostalCode(value, "any");
+  //   //   },
+  //   //   message: "Zip code is not valid",
+  //   // },
+  // },
   country: {
     type: String,
     required: true,
@@ -48,7 +48,7 @@ const AddressSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: false,
+    required: True,
     default: "",
   },
   createdDate: {
