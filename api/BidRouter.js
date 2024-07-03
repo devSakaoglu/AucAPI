@@ -48,7 +48,12 @@ BidRouter.post("/:id", authMiddleware, async (req, res) => {
       return res
         .status(400)
         .json({ message: "Bid price is lower than max bid price" });
+    } else if (req.body.bidPrice <= product.startPrice) {
+      return res
+        .status(400)
+        .json({ message: "Bid price is lower than start price" });
     }
+
     const newBid = new Bid({
       appUser: req.appUser._id,
       product: product._id,

@@ -16,20 +16,18 @@ TransactionRouter.get("/test", (req, res) => {
 TransactionRouter.post("/", authMiddleware, async (req, res) => {
   try {
     const { productId, price } = req.body;
-    console.log(req.body);
+
     const product = await Product.findById(productId);
-    console.log(product);
 
     const seller = await AppUser.findById(product.appUser);
-    console.log(seller);
 
     const buyer = await AppUser.findById(req.appUser._id);
-    console.log(buyer);
 
     if (!product || !seller) {
       return res.status(404).send("Product or seller not found");
     }
 
+    //Todo status kontrolune  bakilacak
     if (product.status === "Active") {
       return res.status(400).send("Product is not available");
     }

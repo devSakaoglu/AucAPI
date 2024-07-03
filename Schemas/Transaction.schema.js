@@ -31,6 +31,15 @@ const TransactionSchema = new mongoose.Schema({
       }
     },
   },
+  paymentIntentId: {
+    type: String,
+    required: true,
+    validator: (value) => {
+      if (!validator.isUUID(value)) {
+        throw new Error("Payment intent ID is not valid");
+      }
+    },
+  },
   status: {
     enum: Object.values(TransactionStatus),
     type: String,
