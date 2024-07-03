@@ -69,6 +69,7 @@ AppUserRouter.post("/login", async (req, res) => {
 
 // LOGOUT Endpoint
 AppUserRouter.post("/logout", authMiddleware, (req, res) => {
+  console.log("Session before logout :", req.session);
   req.session = null;
   console.log(
     "Session is cleared :",
