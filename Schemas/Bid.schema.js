@@ -1,4 +1,9 @@
 import mongoose from "mongoose";
+const status = Object.freeze({
+  pending: "Pending",
+  accepted: "Payment Waiting",
+  rejected: "Rejected",
+});
 
 const BidScheme = new mongoose.Schema({
   appUser: {
@@ -15,6 +20,12 @@ const BidScheme = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "AppUser",
     required: true,
+  },
+  status: {
+    enum: status,
+    type: String,
+    required: true,
+    default: "Pending",
   },
 
   bidPrice: {

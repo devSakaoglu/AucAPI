@@ -1,6 +1,6 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { AppUser } from "../Db.js";
+import { AppUser, Product } from "../Db.js";
 import authMiddleware from "./midleware/auth.js";
 import bcrypt from "bcrypt";
 
@@ -91,6 +91,18 @@ AppUserRouter.post(
     res.status(200).send({ message: "Logout successful" });
   }
 );
+AppUserRouter.get("/reservedProducts", authMiddleware, async (req, res) => {
+  try {
+    const reservedProducts = await Product.find({
+      maxBidPriceUser: req.appUser.id,
+      productStatus: "Reserved",
+    });
+
+    res.json(reservedProducts);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
 
 // GET all users
 AppUserRouter.get(

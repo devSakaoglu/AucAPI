@@ -81,6 +81,12 @@ const AppUserSchema = new mongoose.Schema({
     required: false,
     default: [],
   },
+  reservedProducts: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Product",
+    required: false,
+    default: [],
+  },
   addresses: {
     type: [String],
     required: false,

@@ -13,9 +13,21 @@ ProductRouter.get("/status", async (req, res) => {
       {
         productStatus: "Active",
         auctionEndDate: { $lt: new Date(Date.now()).toISOString() },
+        maxBidPriceUser: { $exists: false },
       },
       { productStatus: "Inactive" }
     );
+    await Product.updateMany(
+      {
+        productStatus: "Active",
+        auctionEndDate: { $lt: new Date(Date.now()).toISOString() },
+        maxBidPriceUser: { $exists: true },
+      },
+      {
+        productStatus: "Reserved",
+      }
+    );
+
     console.log("Status updated");
 
     res.status(200).send({ message: "Status updated" });
@@ -65,6 +77,7 @@ ProductRouter.get("/", async (req, res) => {
   try {
     const products = await Product.find({
       auctionEndDate: { $gte: new Date(Date.now()).toISOString() },
+      productStatus: "Active",
     }).select({ appUser: 0 });
     res.status(200).send(products);
   } catch (error) {

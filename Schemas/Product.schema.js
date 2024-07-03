@@ -9,6 +9,7 @@ const productStatus = Object.freeze({
   active: "Active",
   inactive: "Inactive",
   sold: "Sold",
+  reserved: "Reserved",
   expired: "Expired",
   deleted: "Deleted",
 });
@@ -83,6 +84,16 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: false,
     default: 0,
+  },
+  maxBidPriceId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Bid",
+    required: false,
+  },
+  maxBidPriceUser: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "AppUser",
+    required: false,
   },
   tags: {
     type: [String], //string check

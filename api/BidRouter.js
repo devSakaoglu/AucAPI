@@ -91,11 +91,14 @@ BidRouter.post("/:id", authMiddleware, async (req, res) => {
     const savedBid = await newBid.save();
     req.appUser.bids.push(savedBid._id);
     product.bids.push(savedBid._id);
-    product.maxBidPrice = newBid.bidPrice;
+    product.maxBidPrice = savedBid.bidPrice;
+    product.maxBidPriceId = savedBid._id;
+    product.maxBidPriceUser = savedBid.appUser;
+
     await product.save();
     await req.appUser.save();
 
-    res.status(201).json(newBid);
+    res.status(201).json(savedBid);
   } catch (error) {
     console.log(error.message);
     res.status(400).json({ message: error.message });
