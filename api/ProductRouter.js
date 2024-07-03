@@ -91,22 +91,39 @@ ProductRouter.get("/:id", async (req, res) => {
     const product = await Product.findById(req.params.id)
       .populate({
         path: "appUser",
-        select: "name surname", // appUser için sadece name ve surname alanlarını seçiyoruz
+        select: "name surname",
       })
       .populate({
         path: "bids",
         select: "-_id bidPrice",
-
         populate: {
           path: "appUser",
-          select: "-_id name surname", // bids içindeki sellerUser için sadece name ve surname alanlarını seçiyoruz
+          select: "-_id name surname",
         },
       });
+
     if (!product) {
-      return res.status(404).send();
+      return res.status(404).send("Product not found.");
     }
+
+    // Function to obfuscate the name and surname and append ***
+    function obfuscateNameSurname(user) {
+      if (user && user.name) {
+        user.name = user.name.substring(0, 3) + "***";
+      }
+      if (user && user.surname) {
+        user.surname = user.surname.substring(0, 3) + "***";
+      }
+    }
+
+    // Obfuscate appUser fields in each bid
+    product.bids.forEach((bid) => {
+      obfuscateNameSurname(bid.appUser);
+    });
+
     res.status(200).send(product);
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 });

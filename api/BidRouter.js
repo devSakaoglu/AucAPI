@@ -41,6 +41,8 @@ BidRouter.get("/me", authMiddleware, async (req, res) => {
 
 BidRouter.post("/:id", authMiddleware, async (req, res) => {
   try {
+    console.log("bid post", req.params.id);
+
     if (
       req.appUser.listedProducts.findIndex(
         (id) => id.toString() == req.params.id
@@ -50,6 +52,7 @@ BidRouter.post("/:id", authMiddleware, async (req, res) => {
         .status(400)
         .json({ message: "You cannot bid on your own product" });
     }
+
     console.log(req.params.id);
     const product = await Product.findById(req.params.id).populate("bids");
     console.log(product);
@@ -57,19 +60,25 @@ BidRouter.post("/:id", authMiddleware, async (req, res) => {
     if (new Date(product.auctionEndDate) < Date.now()) {
       return res.status(400).json({ message: "Auction has ended" });
     }
+
     console.log(product.auctionEndDate);
 
     const maxBid = product.bids.sort((a, b) => b.bidPrice - a.bidPrice)[0] || {
       bidPrice: 0,
     };
+
     if (req.body.bidPrice <= maxBid.bidPrice) {
-      res
+      return res
         .status(400)
         .json({ message: "Bid price is lower than max bid price" });
     }
+
     if (req.body.bidPrice <= product.startPrice) {
-      res.status(400).json({ message: "Bid price is lower than start price" });
+      return res
+        .status(400)
+        .json({ message: "Bid price is lower than start price" });
     }
+
     console.log(maxBid);
 
     const newBid = new Bid({
@@ -85,12 +94,13 @@ BidRouter.post("/:id", authMiddleware, async (req, res) => {
     product.maxBidPrice = newBid.bidPrice;
     await product.save();
     await req.appUser.save();
+
     res.status(201).json(newBid);
   } catch (error) {
+    console.log(error.message);
     res.status(400).json({ message: error.message });
   }
 });
-
 // GET all bids
 BidRouter.get("/", async (req, res) => {
   try {
