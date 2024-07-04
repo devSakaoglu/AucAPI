@@ -225,7 +225,7 @@ ProductRouter.delete("/:id", authMiddleware, async (req, res) => {
         .status(200)
         .send({ message: "Product deleted successfully.", product });
     } else {
-      return res.status(400).send("You can't delete active products.");
+      return res.status(400).send("You can just  delete Inactive products.");
     }
   } catch (error) {
     return res.status(500).send(error);
