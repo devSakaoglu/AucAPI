@@ -78,7 +78,7 @@ ProductRouter.get("/", async (req, res) => {
     const products = await Product.find({
       auctionEndDate: { $gte: new Date(Date.now()).toISOString() },
       productStatus: "Active",
-    }).select({ appUser: 0 });
+    }); /*.select({ appUser: 1 })*/
     res.status(200).send(products);
   } catch (error) {
     res.status(500).send(error);

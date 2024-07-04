@@ -20,15 +20,17 @@ AddressRouter.post("/", authMiddleware, async (req, res) => {
       ...req.body,
       appUser: req.appUser._id,
     });
+    const user = await AppUser.findById(req.appUser._id);
 
     const newAddress = await address.save();
     if (newAddress) {
-      await AppUser.findByIdAndUpdate(req.appUser._id, {
-        address: newAddress._id,
-      });
+      user.Addresses = newAddress._id;
+      await user.save();
+
+      console.log("newAddress", "Updated");
     }
 
-    res.status(201).json(newAddress);
+    res.status(201).json("newAddress");
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
