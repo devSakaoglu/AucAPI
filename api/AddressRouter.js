@@ -23,7 +23,7 @@ AddressRouter.post("/", authMiddleware, async (req, res) => {
 
     const newAddress = await address.save();
     if (newAddress) {
-      await AppUser.findByIdAndUpdate(req.appUser.id, {
+      await AppUser.findByIdAndUpdate(req.appUser._id, {
         address: newAddress._id,
       });
     }

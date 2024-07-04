@@ -11,8 +11,15 @@ AppUserRouter.use(express.json());
 AppUserRouter.get("/login", (req, res) => {
   res.json("Login working");
 });
-AppUserRouter.get("/me", authMiddleware, (req, res) => {
-  res.json(req.appUser);
+AppUserRouter.get("/me", authMiddleware, async (req, res) => {
+  // console.log("AppUser", req.appUser);
+
+  const appUserAndAddress = await AppUser.findById(req.appUser._id).populate({
+    path: "Addresses",
+    select: "street city country description",
+  });
+  console.log("AppUserAndAddress", appUserAndAddress);
+  res.status(200).json(appUserAndAddress);
 });
 AppUserRouter.post("/signup", async (req, res) => {
   try {
