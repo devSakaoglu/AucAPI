@@ -57,7 +57,7 @@ ProductRouter.post(
         // maxBidPrice: Number(req.body.startPrice) || 0,
         appUser: req.appUser._id,
         auctionEndDate: new Date(
-          Date.now() + Day * (Number(req.body.auctionDuration) || 1)
+          Date.now() + Day * Number(req.body.auctionDuration)
         ),
         images: images,
       });

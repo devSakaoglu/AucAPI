@@ -139,10 +139,9 @@ const ProductSchema = new mongoose.Schema({
     default: Date.now,
   },
   auctionDuration: {
-    enum: Object.values(auctionDuration),
-    type: String,
+    type: Number,
     required: true,
-    default: auctionDuration.oneDay,
+    default: 1,
   },
   auctionEndDate: {
     type: Date,
