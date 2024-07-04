@@ -29,8 +29,10 @@ AddressRouter.post("/", authMiddleware, async (req, res) => {
 
       console.log("newAddress", "Updated");
     }
-
-    res.status(201).json("newAddress");
+    const updatedUser = await AppUser.findById(req.appUser._id).populate(
+      "Addresses"
+    );
+    res.status(201).send(updatedUser);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
