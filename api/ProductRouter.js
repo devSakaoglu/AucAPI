@@ -4,8 +4,9 @@ import { productStatus } from "../Schemas/Product.schema.js";
 import authMiddleware from "./midleware/auth.js";
 import upload from "./midleware/file.js";
 
-const ProductRouter = express.Router();
 const Day = 1000 * 60 * 60 * 24;
+
+const ProductRouter = express.Router();
 
 // Consider and implement the following routes:
 ProductRouter.get("/status", async (req, res) => {
@@ -50,16 +51,32 @@ ProductRouter.post(
           return file.filename;
         })
       );
+      console.log(req.body);
+      if (!req.body.name) {
+        return res.status(400).send("Name is required");
+      }
       const newProduct = new Product({
         ...req.body,
-
-        maxBidPrice: Number(req.body.startPrice) || 0,
+        maxBidPrice: req.body.startPrice,
         appUser: req.appUser._id,
-        auctionEndDate: new Date(
-          Date.now() + Day * Number(req.body.auctionDuration)
-        ),
         images: images,
       });
+
+      if (req.body.auctionDuration === "") {
+        newProduct.auctionDuration = 1;
+      }
+      if (!req.body.startPrice || req.body.startPrice === "") {
+        newProduct.startPrice = 1;
+        newProduct.maxBidPrice = 1;
+      }
+      if (newProduct.auctionDuration === 0) {
+        newProduct.auctionEndDate = new Date(Date.now() + 60 * 5 * 1000);
+      } else {
+        newProduct.auctionEndDate = new Date(
+          Date.now() + Day * Number(newProduct.auctionDuration)
+        );
+      }
+
       await newProduct.save();
       req.appUser.listedProducts.push(newProduct._id);
       await req.appUser.save();
@@ -79,6 +96,7 @@ ProductRouter.get("/", async (req, res) => {
       auctionEndDate: { $gte: new Date(Date.now()).toISOString() },
       productStatus: "Active",
     }); /*.select({ appUser: 1 })*/
+    console.log(products);
     res.status(200).send(products);
   } catch (error) {
     res.status(500).send(error);
@@ -105,7 +123,7 @@ ProductRouter.get("/me/:status", authMiddleware, async (req, res) => {
       res.status(400).send("Invalid status");
     }
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }
 });
 
