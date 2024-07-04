@@ -1,5 +1,6 @@
 import express from "express";
-import { AppUser, Product } from "../Db.js";
+import { Product } from "../Db.js";
+import { productStatus } from "../Schemas/Product.schema.js";
 import authMiddleware from "./midleware/auth.js";
 import upload from "./midleware/file.js";
 
@@ -51,10 +52,8 @@ ProductRouter.post(
       );
       const newProduct = new Product({
         ...req.body,
-        // quantity: Number(req.body.quantity) || 1,
-        // startPrice: Number(req.body.startPrice) || 0,
-        // auctionDuration: Number(req.body.auctionDuration) || 1,
-        // maxBidPrice: Number(req.body.startPrice) || 0,
+
+        maxBidPrice: Number(req.body.startPrice) || 0,
         appUser: req.appUser._id,
         auctionEndDate: new Date(
           Date.now() + Day * Number(req.body.auctionDuration)
@@ -86,13 +85,25 @@ ProductRouter.get("/", async (req, res) => {
   }
 });
 
-ProductRouter.get("/me", authMiddleware, async (req, res) => {
+ProductRouter.get("/me/:status", authMiddleware, async (req, res) => {
   try {
-    //Todo fix it products appUser id information
     const products = await Product.find({
       appUser: req.appUser._id,
     });
-    res.status(200).send(products);
+    console.log(req.params.status);
+
+    if (req.params.status === ":status") {
+      res.status(200).send(products);
+    } else if (Object.values(productStatus).includes(req.params.status)) {
+      const filteredProducts = products.filter(
+        (product) => product.productStatus === req.params.status
+      );
+      console.log(filteredProducts);
+      console.log(filteredProducts.length);
+      res.status(200).send(filteredProducts);
+    } else {
+      res.status(400).send("Invalid status");
+    }
   } catch (error) {
     res.status(500).send(error);
   }

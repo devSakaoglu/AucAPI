@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import AppUserSchema from "./Schemas/AppUser.schema.js";
 import BidSchema from "./Schemas/Bid.schema.js";
-import ProductSchema from "./Schemas/Product.schema.js";
+import { ProductSchema } from "./Schemas/Product.schema.js";
 import AddressSchema from "./Schemas/Address.schema.js";
 import { TransactionSchema } from "./Schemas/Transaction.schema.js";
 // MongoDB connection URL

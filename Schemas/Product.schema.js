@@ -155,4 +155,4 @@ ProductSchema.pre("save", function (next) {
   next();
 });
 
-export default ProductSchema;
+export { ProductSchema, productStatus };
