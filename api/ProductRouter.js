@@ -95,7 +95,11 @@ ProductRouter.get("/", async (req, res) => {
     const products = await Product.find({
       auctionEndDate: { $gte: new Date(Date.now()).toISOString() },
       productStatus: "Active",
-    }); /*.select({ appUser: 1 })*/
+    }).populate({
+      path: "appUser",
+      select: "name surname",
+    });
+
     console.log(products);
     res.status(200).send(products);
   } catch (error) {
@@ -150,7 +154,6 @@ ProductRouter.get("/:id", async (req, res) => {
       return res.status(404).send("Product not found.");
     }
 
-    // Function to obfuscate the name and surname and append ***
     function obfuscateNameSurname(user) {
       if (user && user.name) {
         user.name = user.name.substring(0, 1) + "***";
