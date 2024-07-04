@@ -51,13 +51,13 @@ ProductRouter.post(
       );
       const newProduct = new Product({
         ...req.body,
-        quantity: Number(req.body.quantity) || 1,
-        startPrice: Number(req.body.startPrice) || 0,
-        auctionDuration: Number(req.body.auctionDuration) || 1,
-        maxBidPrice: Number(req.body.startPrice) || 0,
+        // quantity: Number(req.body.quantity) || 1,
+        // startPrice: Number(req.body.startPrice) || 0,
+        // auctionDuration: Number(req.body.auctionDuration) || 1,
+        // maxBidPrice: Number(req.body.startPrice) || 0,
         appUser: req.appUser._id,
         auctionEndDate: new Date(
-          Date.now() + Day * (req.body.auctionDuration || 1)
+          Date.now() + Day * (Number(req.body.auctionDuration) || 1)
         ),
         images: images,
       });
