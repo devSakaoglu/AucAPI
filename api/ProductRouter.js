@@ -219,11 +219,13 @@ ProductRouter.delete("/:id", authMiddleware, async (req, res) => {
 
     if (!product) {
       return res.status(404).send("Product not found.");
-    } else {
+    } else if (product.productStatus === "Inactive") {
       const result = await Product.findByIdAndDelete(req.params.id);
       return res
         .status(200)
         .send({ message: "Product deleted successfully.", product });
+    } else {
+      return res.status(400).send("You can't delete active products.");
     }
   } catch (error) {
     return res.status(500).send(error);
