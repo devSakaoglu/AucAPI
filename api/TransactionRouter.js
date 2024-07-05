@@ -41,6 +41,8 @@ TransactionRouter.post("/", authMiddleware, async (req, res) => {
 
     console.log(token);
     const charge = await stripe.charges.create({
+      phone: buyer.phone,
+      email: buyer.email,
       amount: price * 100,
       currency: "usd",
       source: token, //"tok_visa"

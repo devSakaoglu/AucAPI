@@ -5,24 +5,6 @@ import authMiddleware from "./midleware/auth.js";
 const BidRouter = express.Router();
 BidRouter.use(express.json());
 
-// BidRouter.post("/", authMiddleware, async (req, res) => {
-//   try {
-//     const sellerUser = await Product.findById(req.body.product).populate(
-//       "appUser"
-//     );
-//     const newBid = new Bid({
-//       appUser: req.appUser._id,
-//       product: req.body.product,
-//       bidPrice: req.body.bidPrice,
-//       sellerUser: sellerUser.appUser._id,
-//     });
-
-//     const savedBid = await newBid.save();
-//     res.status(201).json(savedBid);
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// });
 BidRouter.get("/me", authMiddleware, async (req, res) => {
   console.log(req.appUser._id);
   try {
