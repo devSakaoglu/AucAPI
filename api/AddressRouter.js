@@ -26,8 +26,6 @@ AddressRouter.post("/", authMiddleware, async (req, res) => {
     if (newAddress) {
       user.Addresses = newAddress._id;
       await user.save();
-
-      console.log("newAddress", "Updated");
     }
     const updatedUser = await AppUser.findById(req.appUser._id).populate(
       "Addresses"

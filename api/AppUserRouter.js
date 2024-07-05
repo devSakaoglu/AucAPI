@@ -12,21 +12,14 @@ AppUserRouter.get("/login", (req, res) => {
   res.json("Login working");
 });
 AppUserRouter.get("/me", authMiddleware, async (req, res) => {
-  // console.log("AppUser", req.appUser);
-
   const appUserAndAddress = await AppUser.findById(req.appUser._id).populate({
     path: "Addresses",
     select: "street city country description",
   });
-  console.log("AppUserAndAddress", appUserAndAddress);
   res.status(200).json(appUserAndAddress);
 });
 AppUserRouter.post("/signup", async (req, res) => {
   try {
-    console.log("Req Session row 19", {
-      session: req.session,
-      tpyeof: typeof req.session,
-    });
     if (req.session?.jwt !== undefined) {
       return res.status(400).send("Already logged in");
     }
@@ -38,7 +31,6 @@ AppUserRouter.post("/signup", async (req, res) => {
     const appUser = new AppUser({
       ...req.body,
     });
-    console.log({ ...req.body });
     await appUser.save();
     const token = jwt.sign(
       { email: appUser.email, id: appUser._id },
@@ -86,14 +78,7 @@ AppUserRouter.post("/login", async (req, res) => {
 AppUserRouter.post(
   "/logout",
   /*authMiddleware ,*/ (req, res) => {
-    console.log("Session before logout :", req.session);
     req.session = null;
-    console.log(
-      "Session is cleared :",
-      req.session == null
-        ? "session is empty"
-        : "There is a problem with the session"
-    );
 
     res.status(200).send({ message: "Logout successful" });
   }
@@ -117,11 +102,9 @@ AppUserRouter.get(
   /*authMiddleware,*/ async (req, res) => {
     try {
       const users = await AppUser.find();
-      console.log(users);
 
       res.json(users);
     } catch (error) {
-      console.log(error);
       res.status(500).send(error.message);
     }
   }

@@ -30,11 +30,8 @@ ProductRouter.get("/status", async (req, res) => {
       }
     );
 
-    console.log("Status updated");
-
     res.status(200).send({ message: "Status updated" });
   } catch (error) {
-    console.log(error);
     res.status(500).send({ error: error.message });
   }
 });
@@ -51,7 +48,6 @@ ProductRouter.post(
           return file.filename;
         })
       );
-      console.log(req.body);
       if (!req.body.name) {
         return res.status(400).send("Name is required");
       }
@@ -83,7 +79,6 @@ ProductRouter.post(
 
       res.status(201).send({ newProduct });
     } catch (error) {
-      console.log(error);
       res.status(400).send(error.message);
     }
   }
@@ -100,7 +95,6 @@ ProductRouter.get("/", async (req, res) => {
       select: "name surname",
     });
 
-    console.log(products);
     res.status(200).send(products);
   } catch (error) {
     res.status(500).send(error);
@@ -112,7 +106,6 @@ ProductRouter.get("/me/:status", authMiddleware, async (req, res) => {
     const products = await Product.find({
       appUser: req.appUser._id,
     });
-    console.log(req.params.status);
 
     if (req.params.status === ":status") {
       res.status(200).send(products);
@@ -120,8 +113,7 @@ ProductRouter.get("/me/:status", authMiddleware, async (req, res) => {
       const filteredProducts = products.filter(
         (product) => product.productStatus === req.params.status
       );
-      console.log(filteredProducts);
-      console.log(filteredProducts.length);
+
       res.status(200).send(filteredProducts);
     } else {
       res.status(400).send("Invalid status");
@@ -134,7 +126,6 @@ ProductRouter.get("/me/:status", authMiddleware, async (req, res) => {
 // Get a product by ID
 ProductRouter.get("/:id", async (req, res) => {
   try {
-    console.log(req.params.id);
     const product = await Product.findById(req.params.id)
       .populate({
         path: "appUser",
@@ -173,7 +164,6 @@ ProductRouter.get("/:id", async (req, res) => {
 
     res.status(200).send(product);
   } catch (error) {
-    console.log(error);
     res.status(500).send(error);
   }
 });
@@ -283,20 +273,5 @@ ProductRouter.post("/test", authMiddleware, async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
-
-// async function checkProductStatus() {
-//   // Durumu güncellenmesi gereken ürünleri bul
-//   const products = await Product.find({
-//     status: "active",
-//     expiresAt: { $lt: now },
-//   });
-
-//   // Bulunan ürünlerin durumunu 'inactive' olarak güncelle
-//   for (const product of products) {
-//     product.status = "inactive";
-//     await product.save();
-//     console.log(`Product ${product.name} status updated to inactive.`);
-//   }
-// }
 
 export default ProductRouter;

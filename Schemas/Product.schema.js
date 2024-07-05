@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
-const auctionDuration = Object.freeze({
-  oneDay: 1,
-  oneWeek: 7,
-  oneMonth: 30,
-});
+
 const productStatus = Object.freeze({
   active: "Active",
   inactive: "Inactive",
@@ -96,7 +92,7 @@ const ProductSchema = new mongoose.Schema({
     required: false,
   },
   tags: {
-    type: [String], //string check
+    type: [String],
     required: false,
     validate: {
       validator: function (v) {
@@ -105,11 +101,10 @@ const ProductSchema = new mongoose.Schema({
     },
   },
   category: {
-    type: [String], //enum or string check
+    type: [String],
     required: true,
   },
   quantity: {
-    // add details about the quantity
     type: Number,
     required: false,
   },

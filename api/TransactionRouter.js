@@ -39,14 +39,11 @@ TransactionRouter.post("/", authMiddleware, async (req, res) => {
       return res.status(400).send(" Price is not equal to max bid price");
     }
 
-    console.log(token);
     const charge = await stripe.charges.create({
       amount: price * 100,
       currency: "usd",
       source: token, //"tok_visa"
-      // description: "My First Test Charge (created for API docs)",
     });
-    console.log(charge);
 
     const transaction = new Transaction({
       product: productId,

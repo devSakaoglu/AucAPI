@@ -6,7 +6,6 @@ const BidRouter = express.Router();
 BidRouter.use(express.json());
 
 BidRouter.get("/me", authMiddleware, async (req, res) => {
-  console.log(req.appUser._id);
   try {
     const bids = await Bid.find({ appUser: req.appUser._id })
       .populate({
@@ -23,8 +22,6 @@ BidRouter.get("/me", authMiddleware, async (req, res) => {
 
 BidRouter.post("/:id", authMiddleware, async (req, res) => {
   try {
-    console.log("bid post", req.params.id);
-
     if (
       req.appUser.listedProducts.findIndex(
         (id) => id.toString() == req.params.id
@@ -35,15 +32,11 @@ BidRouter.post("/:id", authMiddleware, async (req, res) => {
         .json({ message: "You cannot bid on your own product" });
     }
 
-    console.log(req.params.id);
     const product = await Product.findById(req.params.id).populate("bids");
-    console.log(product);
 
     if (new Date(product.auctionEndDate) < Date.now()) {
       return res.status(400).json({ message: "Auction has ended" });
     }
-
-    console.log(product.auctionEndDate);
 
     const maxBid = product.bids.sort((a, b) => b.bidPrice - a.bidPrice)[0] || {
       bidPrice: 0,
@@ -60,8 +53,6 @@ BidRouter.post("/:id", authMiddleware, async (req, res) => {
         .status(400)
         .json({ message: "Bid price is lower than start price" });
     }
-
-    console.log(maxBid);
 
     const newBid = new Bid({
       appUser: req.appUser._id,
@@ -82,7 +73,6 @@ BidRouter.post("/:id", authMiddleware, async (req, res) => {
 
     res.status(201).json(savedBid);
   } catch (error) {
-    console.log(error.message);
     res.status(400).json({ message: error.message });
   }
 });
@@ -125,9 +115,7 @@ BidRouter.patch("/:id", async (req, res) => {
     if (req.body.bidPrice != null) {
       bid.bidPrice = req.body.bidPrice;
     }
-    // if (req.body.bidTime != null) {
-    //   bid.bidTime = req.body.bidTime;
-    // }
+
     const updatedBid = await bid.save();
     res.json(updatedBid);
   } catch (error) {

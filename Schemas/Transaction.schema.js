@@ -58,18 +58,18 @@ const TransactionSchema = new mongoose.Schema({
   },
 });
 
-TransactionSchema.method(
-  "changeStatus",
-  async function (status = TransactionStatus.default) {
-    try {
-      this.status = status;
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  }
-);
+// TransactionSchema.method(
+//   "changeStatus",
+//   async function (status = TransactionStatus.default) {
+//     try {
+//       this.status = status;
+//       return true;
+//     } catch (error) {
+//       console.log(error);
+//       return false;
+//     }
+//   }
+// );
 //
 TransactionSchema.pre("save", async function (next) {
   this.modifiedDate = Date.now();

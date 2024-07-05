@@ -37,7 +37,6 @@ const AppUserSchema = new mongoose.Schema({
       message: "Name must contain only letters and two spaces",
     },
   },
-  //fix it
   phone: {
     type: String,
     required: true,

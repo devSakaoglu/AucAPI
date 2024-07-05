@@ -2,7 +2,6 @@ import multer from "multer";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
-// Set storage engine to memory
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/");
@@ -18,13 +17,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10000000 }, // limit file size to 1MB
+  limits: { fileSize: 10000000 },
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
 });
 
-// Check file type
 function checkFileType(file, cb) {
   const filetypes = /jpeg|jpg|png/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
