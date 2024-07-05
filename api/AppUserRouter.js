@@ -48,7 +48,7 @@ AppUserRouter.post("/signup", async (req, res) => {
       }
     );
 
-    req.session = { jwt: token };
+    // req.session = { jwt: token };
     res.status(201).json({ appUser });
   } catch (error) {
     res.status(500).json({ message: error.message });
