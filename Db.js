@@ -4,9 +4,10 @@ import BidSchema from "./Schemas/Bid.schema.js";
 import { ProductSchema } from "./Schemas/Product.schema.js";
 import AddressSchema from "./Schemas/Address.schema.js";
 import { TransactionSchema } from "./Schemas/Transaction.schema.js";
+import dotenv from "dotenv";
+dotenv.config();
 // MongoDB connection URL
-const mongoURL =
-  "mongodb+srv://mtsakaoglu:KAeDnvShvUf9DpY0@aucmongodb.krps0oo.mongodb.net/?retryWrites=true&w=majority&appName=AucMongoDb";
+const mongoURL = process.env.MONGO_URL || "mongodb://localhost:27017/auction";
 
 // Connect to MongoDB
 mongoose
