@@ -46,7 +46,7 @@ const checkProductStatus = async () => {
       console.log(err);
     });
 };
-setInterval(checkProductStatus, 1 * 2 * 1000);
+// setInterval(checkProductStatus, 1 * 2 * 1000);
 
 // Define your routes and middleware here
 app.get("/", (req, res) => {

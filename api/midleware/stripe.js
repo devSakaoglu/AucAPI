@@ -1,10 +1,10 @@
 import Stripe from "stripe";
+import dotenv from "dotenv";
 
-const stripe = new Stripe(
-  "sk_test_51P2HbeDrUQTHv2dXFvd9N9LQYXIZE6JqKpOHg3NjpyLuCvxAcuyT59vfC3GOYPb9QMly5Ld7EzT38hDNyB16UhnP00pg6LMUTr",
-  {
-    apiVersion: "2024-06-20",
-  }
-);
+dotenv.config();
+
+const stripe = new Stripe(process.env.STRIPE_KEY, {
+  apiVersion: "2024-06-20",
+});
 
 export default stripe;
